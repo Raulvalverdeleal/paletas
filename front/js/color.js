@@ -3,7 +3,7 @@ class Color{
         this.id = id;
         this.color = color;
         this.elementoDOM = null;
-        this.saved = false;//CAMBIAR
+        this.saved = saved;//CAMBIAR
         this.editando = false;
         this.crearTarea(saved,contenedor);
     }
@@ -13,7 +13,7 @@ class Color{
         window.addEventListener("keypress", event => {
             switch (event.key) {
                 case 'c':
-                        if (!this.saved) {
+                        if (this.saved == false) {
                             this.elementoDOM.remove()
                             break;
                         }
@@ -130,20 +130,23 @@ class Color{
 
         contenedor.appendChild(this.elementoDOM)
     }
-    async saveColor(){
+    saveColor(){
         this.saved = !this.saved
         if (this.saved) {
-            console.log("llamada a fetch POST")
+            fetch(`/agregar/${this.color.r}/${this.color.g}/${this.color.g}`)
+            .then( respuesta => respuesta.json())
+            .then( ({insertedId}) => this.id = insertedId)
         }else{
-            console.log("llamada a fetch DELETE")
+            fetch(`/eliminar/${this.id}`,{
+                method : "DELETE"
+            })
         }
         
     }
     copyColor(){
         navigator.clipboard.writeText(`rgb(${this.color.r},${this.color.g},${this.color.b})`)
-        console.log("color copiado")
     }
     editcolor(){
-        console.log("editando color")
+        fetch(`/update/${this.id}/${this.color.r}/${this.color.g}/${this.color.b}`)
     }
 }
