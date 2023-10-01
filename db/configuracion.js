@@ -5,38 +5,58 @@ function conectar() {
     return MongoClient.connect(urlConexion)
 }
 
-function colores() {
+function colores(collection) {
     return new Promise( async callback => {
         let conexion = await conectar()
-        let coleccion = conexion.db("colores").collection("colores")
+        let coleccion = conexion.db("colores").collection(collection)
 
         callback(await coleccion.find({}).toArray())
     })
 }
 
-function eliminar(id) {
+function eliminar(id,collection) {
     return new Promise( async callback => {
         let conexion = await conectar()
-        let coleccion = conexion.db("colores").collection("colores")
+        let coleccion = conexion.db("colores").collection(collection)
         callback(await coleccion.deleteOne({_id : new ObjectId(id)}))
     })
 }
 
-function agregar(o_color) {
+function agregar(o_color,collection) {
     return new Promise( async callback => {
         let conexion = await conectar()
-        let coleccion = conexion.db("colores").collection("colores")
+        let coleccion = conexion.db("colores").collection(collection)
         callback(await coleccion.insertOne({r : o_color.r, g : o_color.g, b : o_color.b}))
     })
 }
 
-function editar(o_color) {
+function editar(o_color,collection) {
     return new Promise( async callback => {
         let conexion = await conectar()
-        let coleccion = conexion.db("colores").collection("colores")
-            let resultado = await coleccion.updateOne({ _id : new ObjectId("65140f83c7cf4adf4c186514")},{$set : {r : 0, g : 0, b : 0}})
-
+        let coleccion = conexion.db("colores").collection(collection)
         callback(await coleccion.updateOne({ _id : new ObjectId(o_color.id)},{$set : {r : o_color.r, g : o_color.g, b : o_color.b}}))
     })
 }
-module.exports = {colores,eliminar,agregar,editar}
+
+function readCollections(){
+    return new Promise( async callback => {
+        let conexion = await conectar()
+        callback(await conexion.db("colores").listCollections().toArray())
+    })
+}
+
+function createCollection(name){
+    return new Promise( async callback => {
+        let conexion = await conectar()
+        callback( await conexion.db("colores").createCollection(name))        
+    })
+}
+
+function deleteCollection(name){
+    return new Promise( async callback => {
+        let conexion = await conectar()
+        callback( await conexion.db("colores").dropCollection(name))        
+    })
+}
+
+module.exports = {colores,eliminar,agregar,editar,createCollection,readCollections,deleteCollection}

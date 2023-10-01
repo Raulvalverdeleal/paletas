@@ -1,10 +1,11 @@
 class Color{
-    constructor(id,color,saved,contenedor){
+    constructor(id,color,saved,contenedor,collection){
         this.id = id;
         this.color = color;
         this.elementoDOM = null;
         this.saved = saved;//CAMBIAR
         this.editando = false;
+        this.collection = collection
         this.crearTarea(saved,contenedor);
     }
     crearTarea(saved,contenedor){
@@ -43,13 +44,13 @@ class Color{
         color_b.innerHTML = "B: " + this.color.b
 
         let input_r = document.createElement("input")
-        input_r.setAttribute("type","number")
+        input_r.setAttribute("type","text")
         input_r.style.display = "none"
         let input_g = document.createElement("input")
-        input_g.setAttribute("type","number")
+        input_g.setAttribute("type","text")
         input_g.style.display = "none"
         let input_b = document.createElement("input")
-        input_b.setAttribute("type","number")
+        input_b.setAttribute("type","text")
         input_b.style.display = "none"
 
         info_text.appendChild(input_r)
@@ -85,13 +86,13 @@ class Color{
                 input_b.style.display = "none"
 
                 color_r.style.display = "block"
-                this.color.r = input_r.value
+                this.color.r = this.validate(input_r.value)
 
                 color_g.style.display = "block"
-                this.color.g = input_g.value
+                this.color.g = this.validate(input_g.value)
 
                 color_b.style.display = "block"
-                this.color.b =input_b.value
+                this.color.b = this.validate(input_b.value)
 
                 color_r.innerHTML = "R: " + this.color.r
                 color_g.innerHTML = "G: " + this.color.g
@@ -133,13 +134,17 @@ class Color{
     saveColor(){
         this.saved = !this.saved
         if (this.saved) {
-            fetch(`/agregar/${this.color.r}/${this.color.g}/${this.color.g}`)
+            fetch(`/agregar/${Number(this.color.r)}/${Number(this.color.g)}/${Number(this.color.b)}`)
             .then( respuesta => respuesta.json())
             .then( ({insertedId}) => this.id = insertedId)
         }else{
-            fetch(`/eliminar/${this.id}`,{
-                method : "DELETE"
-            })
+            if (this.id !== 1) {
+                fetch(`/eliminar/${this.id}`,{
+                    method : "DELETE"
+                })
+                .then(respuesta => respuesta.json())
+                .then(respuesta => console.log(respuesta))
+            }
         }
         
     }
@@ -147,6 +152,18 @@ class Color{
         navigator.clipboard.writeText(`rgb(${this.color.r},${this.color.g},${this.color.b})`)
     }
     editcolor(){
-        fetch(`/update/${this.id}/${this.color.r}/${this.color.g}/${this.color.b}`)
+        if (this.id !== 1) {
+            fetch(`/update/${this.id}/${Number(this.color.r)}/${Number(this.color.g)}/${Number(this.color.b)}`)
+        }
+
+    }
+    validate(value){
+        let number = Number(value)
+        if (number > 255) {
+            number = 255
+        }else if(number < 0){
+            number = 0
+        }
+        return number
     }
 }
