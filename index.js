@@ -10,10 +10,15 @@ servidor.use("/",express.static("./front"))
 
 //Middleware que lee los colores que hay en la colloection pasada
 servidor.get("/lectura", async (peticion,respuesta) => {
-    let resultado = await colores(collection);
-    respuesta.json(resultado)
-        
+
+    if (collection !== "") {
+        let resultado = await colores(collection);
+        respuesta.json(resultado)
+    }else{
+        respuesta.json({ error : "No se ha obtenido la paleta que mostrar" })
+    }
     
+
 })
 
 //Middleware que lee todas las collections de la db para pintarlas en el index.html

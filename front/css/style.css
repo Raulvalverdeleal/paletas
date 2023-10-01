@@ -24,11 +24,11 @@ a{
     border-radius: 8px;
     margin-left: 20px;
 }
-h1{
+nav h1{
     font-size: 30px;
     margin-right: 40px;
 }
-h1::before{
+nav h1::before{
     content: "-> ";
     color: #999;
 }
@@ -132,4 +132,20 @@ button:active{
 input{
     width: 100%;
     height: calc( 100% / 3);
+}
+.error{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(2px);
+    color: red;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    font-size: 100px;
+    flex-wrap: wrap;
+    font-weight: bold;
+    text-align: center;
 }

@@ -12,12 +12,18 @@ fetch("/lectura-collection")
     fetch("/lectura")
     .then(respuesta_2 => respuesta_2.json())
     .then(respuesta_2 => {
-        
+        console.log(respuesta_2)
         if (!respuesta_2.error) {
             respuesta_2.forEach(({_id,r,g,b,}) => {
             new Color(_id, {r,g,b}, true, contenedor,collection_name)
             });
-        }else console.error(respuesta_2.error)
+        }else{
+            let h1 = document.createElement("h1")
+            h1.innerHTML = respuesta_2.error
+            h1.classList.add("error")
+            document.querySelector("body").appendChild(h1)
+            document.querySelector("a").style.zIndex = "1000"
+        }
     })
    
     let h1 = document.createElement("h1")
