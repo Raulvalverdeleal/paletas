@@ -1,7 +1,6 @@
 const express = require("express")
 const servidor = express()
 const {colores,eliminar,agregar,editar,createCollection,readCollections,deleteCollection} = require("./db/configuracion.js");
-const { error } = require("console");
 let puerto = process.env.PORT || 4000;
 let collection = ""
 
