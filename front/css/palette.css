@@ -50,14 +50,14 @@ ul{
     flex-direction: column;
     display: flex;
     overflow: scroll;
-    width: 350px;
     padding: 20px;
     border: 3px solid #ddd;
     border-radius: 15px;
     list-style: none;
+    max-height: 500px;
 }
 li{
-    height: 50px;
+    height: 70px;
     border: 2px solid #999;
     border-radius: 10px;
     padding: 10px;
@@ -70,11 +70,12 @@ li:not(:last-child){
 }
 a{
     text-decoration: none;
+    padding: 10px;
     font-size: 20px;
     color: black;
     font-weight: bold;
     height: 100%;
-    padding: 10px;
+    padding: 10px 30px;
     width: 100%;
     border-radius: 5px;
     color: #555;
@@ -90,7 +91,7 @@ li button{
     height: 100%;
     border: none;
     background-color: #f00;
-    width: 30px;
+    min-width: 30px;
     line-height: 4px;
     border-radius: 5px;
     font-size: 30px;
@@ -99,8 +100,12 @@ li button{
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 25px;
     cursor: pointer;
 }
 li button:active{
     transform: scale(1.1);
+}
+span{
+    margin-right: 5px;
 }

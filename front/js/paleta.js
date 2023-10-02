@@ -11,17 +11,36 @@ class Paleta{
         enlace.innerHTML = this.name
         this.elementoDOM.appendChild(enlace)
 
-        let delete_button = document.createElement("button")
-        delete_button.innerHTML = "-"
-        delete_button.addEventListener("click", () => {
-            this.delete(name)
-        })
-        this.elementoDOM.appendChild(delete_button)
-        
-        this.elementoDOM.addEventListener("click",()=>{
+        enlace.addEventListener("click",()=>{
             fetch(`/collection/${this.name}`)
             .then( console.log("collection enviada: " + this.name))
         })
+        let contador = 0
+        fetch(`/lectura/${this.name}`)
+        .then(respuesta => respuesta.json())
+        .then(respuesta => {
+            respuesta.forEach(({r,g,b}) => {
+                if (contador < 3) {
+                    let span = document.createElement("span")
+                    span.style.minWidth = "25px"
+                    span.style.height = "100%"
+                    span.style.borderRadius = "5px"
+                    span.style.backgroundColor = `rgb(${r},${g},${b})`
+                    this.elementoDOM.appendChild(span)
+                }
+                contador++
+            });
+            let delete_button = document.createElement("button")
+            delete_button.innerHTML = "-"
+            delete_button.addEventListener("click", () => {
+                this.delete(name)
+            })
+            this.elementoDOM.appendChild(delete_button)
+        })
+
+        
+        
+        
         
         contenedor.appendChild(this.elementoDOM)
         

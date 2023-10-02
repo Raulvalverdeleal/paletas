@@ -19,7 +19,10 @@ servidor.get("/lectura", async (peticion,respuesta) => {
     
 
 })
-
+servidor.get("/lectura/:name", async (peticion,respuesta) => {    
+        let resultado = await colores(peticion.params.name);
+        respuesta.json(resultado)
+})
 //Middleware que lee todas las collections de la db para pintarlas en el index.html
 servidor.get("/lectura-collections", async (peticion,respuesta) => {
     let resultado =  await readCollections()
@@ -43,6 +46,13 @@ let resultado = 1
 
 //Middleware que cra una nueva collection vacía
 servidor.get("/createCollection/:name", async (peticion,respuesta) => {
+    let consultando = await readCollections()
+    consultando.forEach(({name}) => {
+        if (peticion.params.name == name) {
+            let error = { error : "already exists"}
+            return respuesta.send(error)
+        }
+    });
     await createCollection(peticion.params.name)
 })
 let contador_1 = 1

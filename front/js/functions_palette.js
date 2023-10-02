@@ -20,6 +20,12 @@ form.addEventListener("submit",(event) => {
     if (input.value.trim() !== "") {
         let nombre = input.value.trim().split(" ").join("-")
         fetch(`/createCollection/${nombre}`)
+        .then(respuesta => respuesta.json())
+        .then(respuesta => {
+            if (respuesta.error == "already exists") {
+                return input.value = "already exists"
+            }
+        })
         new Paleta(nombre, contenedor)
         input.value = ""
     }else input.value = "Escriba algo."
