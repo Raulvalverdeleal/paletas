@@ -25,11 +25,13 @@ form.addEventListener("submit",(event) => {
             if (respuesta.error == "already exists") {
                 return input.value = "already exists"
             }
+                new Paleta(nombre, contenedor)
+                input.value = ""
+            
+            
         })
-        new Paleta(nombre, contenedor)
-        input.value = ""
+        
     }else input.value = "Escriba algo."
     
 
 })
-

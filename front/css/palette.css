@@ -46,6 +46,9 @@ form input:nth-child(2){
     text-align: center;
     line-height: 10px;
 }
+form input:nth-child(2):active{
+    transform: scale(1.1);
+}
 ul{
     flex-direction: column;
     display: flex;

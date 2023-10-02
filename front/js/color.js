@@ -44,13 +44,13 @@ class Color{
         color_b.innerHTML = "B: " + this.color.b
 
         let input_r = document.createElement("input")
-        input_r.setAttribute("type","text")
+        input_r.setAttribute("type","number")
         input_r.style.display = "none"
         let input_g = document.createElement("input")
-        input_g.setAttribute("type","text")
+        input_g.setAttribute("type","number")
         input_g.style.display = "none"
         let input_b = document.createElement("input")
-        input_b.setAttribute("type","text")
+        input_b.setAttribute("type","number")
         input_b.style.display = "none"
 
         info_text.appendChild(input_r)

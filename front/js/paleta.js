@@ -11,9 +11,13 @@ class Paleta{
         enlace.innerHTML = this.name
         this.elementoDOM.appendChild(enlace)
 
-        enlace.addEventListener("click",()=>{
+        enlace.addEventListener("click",(event)=>{
+            event.preventDefault()
             fetch(`/collection/${this.name}`)
-            .then( console.log("collection enviada: " + this.name))
+            .then( respuesta => respuesta.text())
+            .then( respuesta => {
+                window.location.href = event.target.href
+            })
         })
         let contador = 0
         fetch(`/lectura/${this.name}`)

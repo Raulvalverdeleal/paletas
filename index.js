@@ -47,13 +47,21 @@ let resultado = 1
 //Middleware que cra una nueva collection vacía
 servidor.get("/createCollection/:name", async (peticion,respuesta) => {
     let consultando = await readCollections()
+    let error_status = false
     consultando.forEach(({name}) => {
         if (peticion.params.name == name) {
             let error = { error : "already exists"}
-            return respuesta.send(error)
+            respuesta.send(error)
+            error_status = true
+
         }
     });
-    await createCollection(peticion.params.name)
+    if (!error_status) {
+        console.log("ok")
+        await createCollection(peticion.params.name)
+        respuesta.send({hola : "hoola"})
+    }
+    
 })
 let contador_1 = 1
 //Middleware que recoge la collection a la cual se va anavegar
@@ -61,6 +69,7 @@ servidor.get("/collection/:name", (peticion,respuesta) => {
     collection = peticion.params.name
     console.log("consultando:\t" + collection + " " + contador_1)
     contador_1++
+    respuesta.send("ok")
 })
 
 let contador_2 = 1
