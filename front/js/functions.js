@@ -6,12 +6,10 @@ fetch("/lectura-collection")
 .then( respuesta => {
 
     collection_name = respuesta
-    console.log("collection consultada: " + collection_name )
 
     fetch("/lectura")
     .then(respuesta_2 => respuesta_2.json())
     .then(respuesta_2 => {
-        console.log(respuesta_2)
         if (!respuesta_2.error) {
             respuesta_2.forEach(({_id,r,g,b,}) => {
                 new Color(_id, {r,g,b}, true, contenedor,collection_name)
@@ -32,7 +30,6 @@ fetch("/lectura-collection")
 })
 
 window.addEventListener("keypress", event => {
-    console.log(event.key)
     switch (event.key) {
         case ' ':
             let [r,g,b] = [0,0,0].map(() => Math.floor(Math.random() * 256));

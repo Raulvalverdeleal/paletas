@@ -44,13 +44,13 @@ class Color{
         color_b.innerHTML = "B: " + this.color.b
 
         let input_r = document.createElement("input")
-        input_r.setAttribute("type","number")
+        input_r.setAttribute("type","text")
         input_r.style.display = "none"
         let input_g = document.createElement("input")
-        input_g.setAttribute("type","number")
+        input_g.setAttribute("type","text")
         input_g.style.display = "none"
         let input_b = document.createElement("input")
-        input_b.setAttribute("type","number")
+        input_b.setAttribute("type","text")
         input_b.style.display = "none"
 
         info_text.appendChild(input_r)
@@ -67,16 +67,25 @@ class Color{
 
                 input_r.style.display = "inline"
                 input_r.value = this.color.r
-                input_r.addEventListener("input",()=> div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`)
+                input_r.addEventListener("input",()=> {
+                    input_r.value = this.validate(input_r.value)
+                    div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`
+                })
 
                 input_g.style.display = "inline"
                 input_g.value = this.color.g
-                input_g.addEventListener("input",()=> div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`)
+                input_g.addEventListener("input",()=> {
+                    input_g.value = this.validate(input_g.value)
+                    div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`
+                })
 
 
                 input_b.style.display = "inline"
                 input_b.value = this.color.b
-                input_b.addEventListener("input",()=> div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`)
+                input_b.addEventListener("input",()=> {
+                    input_b.value = this.validate(input_b.value)
+                    div_color.style.backgroundColor = `rgb(${input_r.value},${input_g.value},${input_b.value})`
+                })
 
             }
             else{
@@ -86,13 +95,13 @@ class Color{
                 input_b.style.display = "none"
 
                 color_r.style.display = "block"
-                this.color.r = this.validate(input_r.value)
+                this.color.r = input_r.value
 
                 color_g.style.display = "block"
-                this.color.g = this.validate(input_g.value)
+                this.color.g = input_g.value
 
                 color_b.style.display = "block"
-                this.color.b = this.validate(input_b.value)
+                this.color.b = input_b.value
 
                 color_r.innerHTML = "R: " + this.color.r
                 color_g.innerHTML = "G: " + this.color.g
@@ -101,9 +110,6 @@ class Color{
                 this.editcolor()
 
             }
-
-            
-            
         })
         
         //boton copy & save
@@ -134,16 +140,35 @@ class Color{
     saveColor(){
         this.saved = !this.saved
         if (this.saved) {
-            fetch(`/agregar/${Number(this.color.r)}/${Number(this.color.g)}/${Number(this.color.b)}`)
+            fetch(`/agregar-color`,{
+                method : "POST",
+                body : JSON.stringify({r : this.color.r, g : this.color.g, b : this.color.b}),
+                headers : {
+                    "Content-type" : "application/json"
+                }
+            })
             .then( respuesta => respuesta.json())
-            .then( ({insertedId}) => this.id = insertedId)
+            .then( respuesta => {
+                if (respuesta.acknowledged) {
+                    this.id = respuesta.insertedId
+                }else console.error("no fue posible realizar la operación de guardar")
+                
+            })
         }else{
             if (this.id !== 1) {
-                fetch(`/eliminar/${this.id}`,{
-                    method : "DELETE"
+                fetch(`/eliminar-color`,{
+                    method : "DELETE",
+                    body : JSON.stringify({id : this.id}),
+                    headers : {
+                        "Content-type" : "application/json"
+                    }
                 })
                 .then(respuesta => respuesta.json())
-                .then(respuesta => console.log(respuesta))
+                .then(respuesta => {
+                    if (respuesta.deletedCount !== 1) {
+                        console.error("no fue posible realizar la operación de borrar")
+                    }
+                })
             }
         }
         
@@ -153,17 +178,36 @@ class Color{
     }
     editcolor(){
         if (this.id !== 1) {
-            fetch(`/update/${this.id}/${Number(this.color.r)}/${Number(this.color.g)}/${Number(this.color.b)}`)
+            fetch(`/update-color`,{
+                method : "PUT",
+                body : JSON.stringify({
+                    id : this.id,
+                    r : this.color.r,
+                    g : this.color.g,
+                    b : this.color.b
+                }),
+                headers : {
+                    "Content-type" : "application/json"
+                }
+            })
+            .then( respuesta => respuesta.json())
+            .then( ({modifiedCount}) => {
+                if (modifiedCount == 0) {
+                    console.error("No se ha podido realizar la operación de editar")
+                }
+            })
         }
-
     }
     validate(value){
-        let number = Number(value)
-        if (number > 255) {
-            number = 255
-        }else if(number < 0){
-            number = 0
-        }
-        return number
+        let validate = /^\d{1,3}$/.test(Number(value))
+        let resultado = 0
+        if (validate) {
+            if (value >= 0 && value <= 255) {
+                resultado = value
+            }else if(value < 0){
+                resultado = 0
+            }else resultado = 255
+        }else resultado = ""
+        return resultado
     }
 }
