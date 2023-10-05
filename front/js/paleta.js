@@ -20,6 +20,7 @@ class Paleta{
             })
         })
         let contador = 0
+        console.log(this.name)
         fetch(`/lectura/${this.name}`)
         .then(respuesta => respuesta.json())
         .then(respuesta => {
@@ -41,24 +42,24 @@ class Paleta{
             })
             this.elementoDOM.appendChild(delete_button)
         })
-
-        
-        
-        
-        
         contenedor.appendChild(this.elementoDOM)
         
     }
     delete(collection){
         
-            fetch(`/delete-collection/${collection}`,{
-                method : "DELETE"
+            fetch(`/delete-collection`,{
+                method : "DELETE",
+                body : JSON.stringify({ name : collection}),
+                headers : {
+                    "Content-type" : "application/json"
+                }
             })
             .then(respuesta => respuesta.json())
             .then(respuesta => {
+                console.log(respuesta)
                 if (respuesta) {
                     this.elementoDOM.remove()
-                }
+                }else console.error("No se ha podido realizar la operacion de eliminar paleta")
             })
 
     }

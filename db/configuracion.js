@@ -9,7 +9,6 @@ function colores(collection) {
     return new Promise( async callback => {
         let conexion = await conectar()
         let coleccion = conexion.db("colores").collection(collection)
-
         callback(await coleccion.find({}).toArray())
         conexion.close()
     })
@@ -53,8 +52,11 @@ function readCollections(){
 function createCollection(name){
     return new Promise( async callback => {
         let conexion = await conectar()
-        callback( await conexion.db("colores").createCollection(name))       
-        conexion.close() 
+        let new_collection = await conexion.db("colores").createCollection(name)
+        let resultado = { is : true}
+        new_collection ? resultado : resultado.is = false
+        callback(resultado)
+        conexion.close()
     })
 }
 
@@ -67,3 +69,4 @@ function deleteCollection(name){
 }
 
 module.exports = {colores,eliminar,agregar,editar,createCollection,readCollections,deleteCollection}
+

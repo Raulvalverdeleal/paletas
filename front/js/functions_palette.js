@@ -19,19 +19,23 @@ form.addEventListener("submit",(event) => {
     event.preventDefault()
     if (input.value.trim() !== "") {
         let nombre = input.value.trim().split(" ").join("-")
-        fetch(`/createCollection/${nombre}`)
+        fetch(`/create-collection`,{
+            method : "POST",
+            body : JSON.stringify({ name : nombre}),
+            headers : {
+                "Content-type" : "application/json"
+            }
+        })
         .then(respuesta => respuesta.json())
         .then(respuesta => {
-            if (respuesta.error == "already exists") {
-                return input.value = "already exists"
+            if (!respuesta.is) {
+                console.error("error en la operación de añadir")
+                return input.value = ""
             }
-                new Paleta(nombre, contenedor)
-                input.value = ""
-            
-            
+            new Paleta(nombre, contenedor)
+            input.value = ""
         })
-        
-    }else input.value = "Escriba algo."
+    }else input.value = "no puede estar vacío"
     
 
 })

@@ -199,15 +199,17 @@ class Color{
         }
     }
     validate(value){
-        let validate = /^\d{1,3}$/.test(Number(value))
         let resultado = 0
-        if (validate) {
-            if (value >= 0 && value <= 255) {
-                resultado = value
-            }else if(value < 0){
-                resultado = 0
-            }else resultado = 255
-        }else resultado = ""
+        if (value || value == 0) {
+            let validate = /^\d{1,3}$/.test(value)
+            if (validate) {
+                if (value >= 0 && value <= 255) {
+                    resultado = value
+                }else if(value < 0){
+                    resultado = 0
+                }else resultado = 255
+            }else resultado = 0
+        }else resultado = 0
         return resultado
     }
 }
