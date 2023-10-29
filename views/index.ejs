@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <meta name="theme-color" content="#1b1624">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+    <link rel="stylesheet" href="/style/style.css">
+</head>
+<body>
+    <nav>
+        <button><span class="material-symbols-outlined">menu</span></button>
+        <form>
+            <input type="text" placeholder="Crear paleta" class="test">
+            <input type="submit" class="material-symbols-outlined" value="add">
+        </form>
+        <input id="buscarPaleta" type="text" placeholder="Buscar paleta...">
+        <button><span class="material-symbols-outlined">logout</span></button>
+    </nav>
+    <div class="menu hidden">
+        <ul>
+            <li>
+                <p>Cambiar nombre de usuario.</p>
+                <form>
+                    <input type="text" placeholder="Nuevo nombre ...">
+                    <input type="submit" class="material-symbols-outlined" value="save">
+                </form>
+            </li>
+            <li><p>Cambiar Email</p><form><input type="text" placeholder="Nuevo email ..."><input type="submit" class="material-symbols-outlined" value="save"></form></li>
+            <li>
+                <p>Cambiar contraseña</p>
+                <form>
+                    <input type="password" placeholder="Nueva contraseña">
+                    <input type="password" placeholder="Confirmar contraseña">
+                    <input type="submit" class="material-symbols-outlined" value="save">
+                </form>
+            </li>
+            <li><p>Borrar cuenta</p></li>
+        </ul>
+    </div>
+    <div class="fondo displayNone"></div>
+    <article>
+        <section>
+            <h2><br><%= usuario.usuario.data.nombre %></h2>
+            <p>Crea la paleta perfecta y libera tu creatividad con palette maker.</p>
+        </section>
+    </article>
+    <ul class="supreme">
+    </ul>
+    <div class="space"></div>
+    <script src="/js/conversionColores.js"></script>
+    <script src="/js/Opaleta.js"></script>
+    <script src="/js/functions.js"></script>
+</body>
+</html>

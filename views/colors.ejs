@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <meta name="theme-color" content="#1b1624">
+    <link rel="stylesheet" href="/style/colors.css">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+</head>
+<body>
+    <nav>
+        <a href="/"><span class="material-symbols-outlined">arrow_back_ios_new</span></a>
+        <section>
+            <input type="number" placeholder="H" min="1" max="360">
+            <input type="number" placeholder="S" min="1" max="100">
+            <input type="number" placeholder="L" min="1" max="100">
+        </section>
+        <section>
+            
+            <h2><%=  paleta %></h2>
+            <button><span class="material-symbols-outlined">ios_share</span>
+            <span class="tooltiptext" style="visibility: hidden; scale: 1;">SVG copiado al portapapeles</span>
+            </button>
+        </section>
+    </nav>
+    <ul class="contenedor">
+    </ul>
+    <ul class="addColorButtons">
+        <li>
+            <form>
+                <input type="color">
+                <input type="submit" class="material-symbols-outlined" value="add">
+            </form>
+        </li>
+        <li>
+            <button id="analogoR"></button>
+        </li>
+        <li>
+            <button id="analogoL"></button>
+        </li>
+        <li>
+            <button id="complementario"></button>
+        </li>
+    </ul>
+    <script src="/js/conversionColores.js"></script>
+    <script src="/js/Ocolor.js"></script>
+    <script src="/js/colors.js"></script>
+</body>
+</html>

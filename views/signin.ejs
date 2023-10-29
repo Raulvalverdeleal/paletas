@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Paletas</title>
+	<meta name="theme-color" content="#1b1624">
+	<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,300&display=swap" rel="stylesheet">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" type="text/css" href="/style/login.css">
+</head>
+<body>
+
+	<div class="circle"></div>
+	<div class="card">
+		<h1>Inicia sesión en</h1>
+		<form class="form" action="/signin" method="POST">
+			<% if(error){ %>
+				<input type="text" placeholder="Name" name="id" value="<%= error %>">
+			<% } else {%>
+				<input type="text" placeholder="Name" name="id">
+			<% }%>
+			<input type="password" placeholder="Password" name="password">
+			<button type="sumbit">Sign in</button>
+		</form>
+		<footer>
+			¿Aún no tienes una cuenta? Click
+			<a href="/login">aquí</a>
+		</footer>
+		
+	</div>
+</body>
+<script src="/js/signin.js"></script>
+</html>

@@ -1,0 +1,341 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Satoshi', sans-serif;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    overflow: hidden;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    position: relative;
+    height: 40px;
+    background-color: #1b1624;
+}
+nav a{
+    text-decoration: none;
+    background-color: rgb(41, 84, 255);
+    border-radius: 5px;
+    transition: background-color .2s ease-in-out, scale .2s ease-in-out;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+nav a:hover{
+    background-color: rgb(0, 136, 255);
+    scale: 1.1;
+}
+nav a span{
+    color: white;
+}
+nav h2{
+    color: white;
+}
+nav section:nth-child(2){
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+nav section:last-child{
+    display: flex;
+    align-items: center;
+}
+nav section:last-child :last-child:not(span){
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(41, 84, 255);
+    transition: background-color .2s ease-in-out, scale .2s ease-in-out;
+    height: 35px;
+    cursor: pointer;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+nav section:last-child button:hover{
+    background-color: rgb(57, 235, 90);
+}
+nav section:last-child :last-child span{
+    color: white;
+}
+nav section:last-child h2{
+    margin-right: 20px;
+}
+nav section input{
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background-color .2s ease-in-out;
+    border: none;
+    height: 30px;
+    font-size: 16px;
+    padding: 0 10px;
+    border-radius: 5px;
+    width: 45px;
+}
+nav section input:focus{
+    outline: none;
+    border: none;
+    box-shadow: 0 0 0px 3px rgb(0, 136, 255);
+}
+nav section input:not(:last-child){
+    margin-right: 10px;
+}
+ul.contenedor{
+    height: calc(100% - 50px);
+    background-color: #222237;
+    display: flex;
+    list-style: none;
+}
+li.color{
+    width: 100%;
+    position: relative;
+    /* transition: all .5s ease-in-out; */
+    overflow: hidden;
+}
+li.color:hover{
+    flex-shrink: 0;
+}
+.color section{
+    width: 100%;
+    height: 40vh;
+    position: absolute;
+    background-color: white;
+    transition: bottom .3s ease-in-out;
+    bottom: -40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.color section section{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    width: 80%;
+    position: relative;
+    top: 2.5%;
+}
+.color p{
+    transition: opacity .2s ease-in;
+}
+.color button{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    scale: 1.2;
+    cursor: pointer;
+    transition: scale .2s ease-in-out;
+}
+.color section button:nth-child(2){
+    background-color: #ff5858;
+    border-radius: 5px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 10%;
+    top: 30%;
+}
+.color section button:nth-child(2) span{
+    color: white;
+}
+.color section button:nth-child(2):hover{
+    background-color: #ff4646;
+    scale: 1.3;
+}
+.displayNone{
+    display: none;
+}
+.color button:hover{
+    scale: 1.5;
+}
+.color p{
+    font-size: 20px;
+    cursor: pointer;
+    word-break: keep-all;
+    white-space: nowrap;
+    animation: popUp .2s;
+}
+.color:hover section{
+    bottom: 0;
+}
+.addColorButtons{
+    width: 100%;
+    height: 40px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    background-color: white;
+    flex-shrink: 0;
+    position: fixed;
+    bottom: 0;
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.addColorButtons li{
+    width: calc(100% / 4);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.addColorButtons li:not(:first-child){
+    border-left: 1px solid #aaa;
+}
+.addColorButtons li button{
+    padding: 5px;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background-color .2s ease-in-out;
+    height: 100%;
+    border: none;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.3);
+    width: 100px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 8px;
+}
+.addColorButtons li button:hover, .addColorButtons li form input:last-child:hover{
+    background-color: #e4e4e4;
+}
+.addColorButtons li:last-child button{
+    margin-right: 20px;
+}
+.addColorButtons li:first-child{
+    display: flex;
+    flex-shrink: 0;
+    min-width: 150px;
+}
+.addColorButtons li form{
+    width: calc(100% - 30px);
+    display: flex;
+    height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+.addColorButtons li form input:first-child, .color section input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    transition: scale .2s ease-in-out;
+    border: none;
+    cursor: pointer;
+    animation: popUp .2s;
+}
+.addColorButtons li form input:first-child{
+    width: calc(100% - 50px);
+}
+.addColorButtons li form input:first-child:hover, .color section input:hover{
+    scale: 1.05;
+}
+.addColorButtons li form input:first-child::-webkit-color-swatch{
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.addColorButtons li form input:first-child::-moz-color-swatch {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.addColorButtons li form input:last-child{
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background-color: rgb(41, 84, 255);
+    transition: background-color .2s ease-in-out;
+}
+.addColorButtons li form input:last-child:hover{
+    background-color: rgb(57, 235, 90);
+}
+.color section input::-webkit-color-swatch{
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.color section input::-moz-color-swatch {
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.color section input{
+    width: 34.5%;
+    height: 40px;
+}
+.nav section:last-child :last-child:not(span){
+    position: relative;
+    display: inline-block;
+}
+nav section:last-child :last-child:not(span) .tooltiptext {
+  visibility: hidden;
+background-color: rgb(41, 84, 255);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  border-radius: 6px;
+  height: calc(35px - 20px);
+  font-size: 17px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  right: 80px;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 10;
+  margin-left: -60px;
+
+}
+nav section:last-child :last-child:not(span) .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 39%;
+  transform: rotate(270deg);
+  right: -10px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgb(41, 84, 255) transparent transparent transparent;
+
+}
+@keyframes popUp {
+    0%{
+        scale:  0;
+    }
+    75%{
+        scale: 1.2;
+    }
+    100%{
+        scale: 1;
+    }
+}
