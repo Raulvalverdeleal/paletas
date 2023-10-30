@@ -31,7 +31,7 @@ fetch("/to-read",{
 .then( usuario => {
     
         usuario.usuario.paletas.forEach(({nombre}) => {
-            new Paleta( usuario._id, nombre, contenedor)
+            new Paleta(nombre, contenedor)
         });
 })
 
@@ -189,7 +189,7 @@ form.addEventListener("submit",(event) => {
         if (nombre) {
             fetch(`/to-add`,{
             method : "POST",
-            body : JSON.stringify({ tipo : 2, paleta : nombre}),
+            body : JSON.stringify({tipo : 2, paleta : nombre}),
             headers : {
                 "Content-type" : "application/json"
             }
@@ -199,7 +199,7 @@ form.addEventListener("submit",(event) => {
                 if (typeof(r) == "string") {
                     errorAnimation(r)
                 }else{
-                    new Paleta(r.userId , r.pallete_n, contenedor)
+                    new Paleta(r.pallete_n, contenedor)
                     input.value = ""
                 }
             })

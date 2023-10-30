@@ -1,7 +1,7 @@
 const {MongoClient, ObjectId} = require("mongodb");
 const {ERR_INFO} = require("../err_messages");
 const { generateId } = require("../id_generator");
-const urlConexion = process.env.URL_MONGO;
+const urlConexion = "mongodb+srv://raulvalverdeleal:UqZ8YoXtuTrpr7jJUBkk49h77QeBk@colores.m4u4gev.mongodb.net/"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 function conectar() {
@@ -227,13 +227,16 @@ function deleteUser(id){
 }
 //2
 function deletePallete(id,paleta){
+    console.log(paleta)
     return new Promise(async callback => {
         let conexion = await conectar()
         let collection = conexion.db("pruebas").collection("pruebas")
         let arrPAletas_2 = []
         let paletas = await getPallets(id)
+        console.log(paletas)
         paletas.forEach(({nombre}) => arrPAletas_2.push(nombre))
-        paletas.splice(paletas.indexOf(arrPAletas_2.indexOf(paleta)),1)
+        paletas.splice(arrPAletas_2.indexOf(paleta),1)
+        console.log(paletas)
         let resultado = await collection.updateOne({ _id : new ObjectId(id)}, {$set : { "usuario.paletas" : paletas}})
         callback(resultado)
         conexion.close()

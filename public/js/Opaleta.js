@@ -1,6 +1,5 @@
 class Paleta{
-    constructor(userId,name,contenedor){
-        this.userId = userId
+    constructor(name,contenedor){
         this.name = name;
         this.elementoDOM = null;
         this.crearPaleta(contenedor);
@@ -37,7 +36,7 @@ class Paleta{
                 if (nombre) {
                     fetch("/to-update",{
                         method : "PUT",
-                        body : JSON.stringify({tipo : 4,id : this.userId, paleta_n : this.name, nuevo : nombre}),
+                        body : JSON.stringify({tipo : 4, paleta_n : this.name, nuevo : nombre}),
                         headers : {
                             "Content-type" : "application/json"
                         }
@@ -79,7 +78,7 @@ class Paleta{
         let p = document.createElement("p")
         fetch(`/to-read`,{
             method : "POST",
-            body : JSON.stringify({tipo : 3, id : this.userId, paleta : this.name}),
+            body : JSON.stringify({tipo : 3, paleta : this.name}),
             headers : {
                 "Content-type" : "application/json"
             }
@@ -127,11 +126,11 @@ class Paleta{
         contenedor.appendChild(this.elementoDOM)
     }
     delete(){
+            console.log(this.name)
             fetch(`/to-delete`,{
                 method : "DELETE",
                 body : JSON.stringify({
                     tipo : 1,
-                    id : this.userId,
                     paleta : this.name
                 }),
                 headers : {

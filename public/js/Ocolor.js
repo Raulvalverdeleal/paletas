@@ -1,7 +1,6 @@
 let items = 0
 class Color{
-    constructor(userId,paleta,color,contenedor){
-        this.userId = userId;
+    constructor(paleta,color,contenedor){
         this.paleta = paleta;
         this.color = color;
         this.elementoDOM = null;
@@ -60,7 +59,6 @@ class Color{
             method : "PUT",
             body : JSON.stringify({
                 tipo : 5,
-                id : this.userId,
                 paleta_n : this.paleta,
                 color : {
                     id : this.color.id,
@@ -112,7 +110,6 @@ class Color{
             method : "DELETE",
             body : JSON.stringify({
                 tipo : 2,
-                id : this.userId,
                 paleta_n : this.paleta,
                 colorId : this.color.id
             }),

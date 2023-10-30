@@ -7,7 +7,6 @@ const h2 = document.querySelector("h2")
 const nav = document.querySelector("nav")
 const exportButton = document.querySelector("nav section:last-child :last-child:not(span)")
 const tooltip = document.querySelector(".tooltiptext")
-let info = ""
 document.addEventListener("DOMContentLoaded", ()=> {
     fetch("/to-read",{
         method : "POST",
@@ -19,10 +18,11 @@ document.addEventListener("DOMContentLoaded", ()=> {
     .then(respuesta => respuesta.json())
     .then(respuesta => {
         if (!!respuesta.array) {
-            info = respuesta.id
+            console.log(contenedor)
+            console.log(respuesta)
             items = respuesta.array.colores.length
             respuesta.array.colores.forEach(({id,r,g,b}) => {
-                new Color(respuesta.id,respuesta.array.nombre,{id,r,g,b},contenedor)
+                new Color(respuesta.array.nombre,{id,r,g,b},contenedor)
             })
         }
     })
@@ -32,7 +32,7 @@ colorForm.addEventListener("submit",(event)=>{
     let ocolor = hexToRgb(colorInput.value)
     fetch("/to-add",{
         method : "POST",
-        body : JSON.stringify({tipo : 3, id : info, paleta_n : h2.innerHTML, color : ocolor}),
+        body : JSON.stringify({tipo : 3, paleta_n : h2.innerHTML, color : ocolor}),
         headers : {
             "Content-type" : "application/json"
         }
@@ -41,7 +41,7 @@ colorForm.addEventListener("submit",(event)=>{
     .then( respuesta => {
         ocolor.id = respuesta.r
         items++
-        new Color(info,h2.innerHTML,ocolor,contenedor)
+        new Color(h2.innerHTML,ocolor,contenedor)
     })
 })
 function extractRGBValues(backgroundColor) {
@@ -86,7 +86,7 @@ addColorButtons.forEach( button => {
             let ocolor = {r : r, g : g, b : b}
             fetch("/to-add",{
             method : "POST",
-            body : JSON.stringify({tipo : 3, id : info, paleta_n : h2.innerHTML, color : ocolor}),
+            body : JSON.stringify({tipo : 3, paleta_n : h2.innerHTML, color : ocolor}),
             headers : {
                 "Content-type" : "application/json"
                 }
@@ -95,7 +95,7 @@ addColorButtons.forEach( button => {
             .then( respuesta => {
                 ocolor.id = respuesta.r
                 items++
-                new Color(info,h2.innerHTML,ocolor,contenedor)
+                new Color(h2.innerHTML,ocolor,contenedor)
             })
         }
     })

@@ -3,10 +3,11 @@ const session = require("express-session")
 const servidor = express()
 const {ERR_INFO} = require("./err_messages")
 const body_parser = require("body-parser")
+const async = require("async")
 const {getUserById,loginUser,getPallets,getColorsFromPallet,addNewUser,addNewPallete,addNewColor,deleteUser,deletePallete,deleteColor,updateUserName,updateUserPassword,updateUserEmail,updatePaletteName,updateColor} = require("./db/db.js");
 let puerto = process.env.PORT || 4000;
 servidor.use(session({
-    secret : process.env.COOKIE,
+    secret : "/owr0r03ys-,¿/owr0r¿31Bs-,¿r0r/owka5u:k31B31Bs-,¿At2s-,$lus-,¿/ow31B¿u:k=?A¿=?A/ow¿r0r/owr0ru:k)Y*-WN¿zG@#b3ç4¡9R(CJjtHgFBm(N#¿h?14-u¿U4S*S.¿U4S4-u",
     resave : false,
     saveUninitialized : false
 }))
@@ -21,46 +22,55 @@ function validate(value){
     return validate ? resultado : 0
 }
 servidor.get("/", (peticion,respuesta) =>{
-    return !!peticion.session.usuario ? respuesta.render("index",{usuario : peticion.session.usuario}) : respuesta.redirect("/login")
+    return !!peticion.session.usuario ? respuesta.render("index",{usuario : peticion.session.usuario}) : respuesta.redirect("/signup")
 })
 
-servidor.get("/login",async (peticion,respuesta) => {
-    return !!!peticion.session.usuario ? respuesta.render("login",{error : peticion.session.errUsExists}) : respuesta.redirect("/")
+servidor.get("/signup",async (peticion,respuesta) => {
+    return !!!peticion.session.usuario ? respuesta.render("signup",{error : peticion.session.errUsExists}) : respuesta.redirect("/")
 })
-
-servidor.post("/login",async (peticion,respuesta) => {
-    if (!!!peticion.session.usuario) {
+const createAccountQueue = async.queue((task, callback) => {
+    task(callback)
+},1)
+servidor.post("/signup",(peticion,respuesta) => {
+    createAccountQueue.push( async callback => {
+        if (!!!peticion.session.usuario) {
         let resultado = await addNewUser(peticion.body.nombre,peticion.body.email,peticion.body.password)
-        if(typeof(resultado) !== "string"){
-            let o_usuario = await getUserById(resultado.insertedId)
-            peticion.session.usuario = o_usuario
-        }else peticion.session.errUsExists = ERR_INFO.NAME_EXISTS
-    }
-    respuesta.redirect("/")
-})
-servidor.get("/signin",(peticion,respuesta) => {
-    if (!!!peticion.session.usuario) {
-        return peticion.session.errlogin ? respuesta.render("signin",{error : peticion.session.errlogin}) : respuesta.render("signin",{error : ""})
-    }
-    respuesta.redirect("/")
-})
-
-servidor.post("/signin",async (peticion,respuesta) => {
-    if (!!!peticion.session.usuario) {                
-        let o_usuario = await loginUser(peticion.body.id,peticion.body.password)
-        if (typeof(o_usuario) !== "string") {
-            peticion.session.usuario = o_usuario
-        }else{
-            peticion.session.errlogin = o_usuario
-            return respuesta.redirect("/signin")
+            if(typeof(resultado) !== "string"){
+                let o_usuario = await getUserById(resultado.insertedId)
+                peticion.session.usuario = o_usuario
+            }else peticion.session.errUsExists = ERR_INFO.NAME_EXISTS
         }
+        respuesta.redirect("/")
+        callback()
+    })
+})
+const loginQueue = async.queue((task, callback) => {
+    task(callback)
+},1)
+servidor.post("/login",async (peticion,respuesta) => {
+    loginQueue.push( async callback => {
+        if (!!!peticion.session.usuario) {                
+        let o_usuario = await loginUser(peticion.body.id,peticion.body.password)
+            if (typeof(o_usuario) !== "string") {
+                peticion.session.usuario = o_usuario
+            }else{
+                peticion.session.errlogin = o_usuario
+                return respuesta.redirect("/login")
+            }
+        }
+        respuesta.redirect("/")
+        callback()
+    })
+})
+servidor.get("/login",(peticion,respuesta) => {
+    if (!!!peticion.session.usuario) {
+        return peticion.session.errlogin ? respuesta.render("login",{error : peticion.session.errlogin}) : respuesta.render("login",{error : ""})
     }
     respuesta.redirect("/")
 })
-
 servidor.get("/logout",(peticion,respuesta) => {
     peticion.session.destroy()
-    respuesta.redirect("/login")
+    respuesta.redirect("/signup")
 })
 servidor.get("/deleteuser", async (peticion,respuesta) => {
     let resultado = await deleteUser(peticion.session.usuario._id)
@@ -84,7 +94,6 @@ servidor.post("/to-read", async (peticion,respuesta) => {
         case 3:
         resultado = {
             array : await getColorsFromPallet(peticion.session.usuario._id,peticion.body.paleta),
-            id : peticion.session.usuario._id
         }
         break;
 
@@ -110,7 +119,7 @@ servidor.post("/to-add",async (peticion,respuesta) => {
             g : validate(peticion.body.color.g),
             b : validate(peticion.body.color.b)
         }
-        resultado = {id : await addNewColor(peticion.body.id, peticion.body.paleta_n, o_color)}
+        resultado = {id : await addNewColor(peticion.session.usuario._id, peticion.body.paleta_n, o_color)}
         break;
 
         default:
@@ -146,11 +155,11 @@ servidor.put("/to-update",async (peticion,respuesta) => {
         break;
 
         case 4:
-        resultado = await updatePaletteName(peticion.body.id,peticion.body.paleta_n,peticion.body.nuevo)
+        resultado = await updatePaletteName(peticion.session.usuario._id,peticion.body.paleta_n,peticion.body.nuevo)
         break;
 
         case 5:
-        resultado = await updateColor(peticion.body.id, peticion.body.paleta_n, peticion.body.color)
+        resultado = await updateColor(peticion.session.usuario._id, peticion.body.paleta_n, peticion.body.color)
         break;
 
         default:
@@ -165,11 +174,12 @@ servidor.delete("/to-delete", async (peticion,respuesta) => {
     let resultado = { err : false, m : ""}
     switch (tipo) {
         case 1:
-        resultado = await deletePallete(peticion.body.id, peticion.body.paleta)
+        console.log(peticion.body.paleta)
+        resultado = await deletePallete(peticion.session.usuario._id, peticion.body.paleta)
         break;
 
         case 2:
-        resultado = await deleteColor(peticion.body.id, peticion.body.paleta_n, peticion.body.colorId)
+        resultado = await deleteColor(peticion.session.usuario._id, peticion.body.paleta_n, peticion.body.colorId)
         break;
 
         default:
