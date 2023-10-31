@@ -19,6 +19,7 @@ const sectionMenu2 = document.querySelector(".menu li:nth-child(2)")
 const sectionMenu3 = document.querySelector(".menu li:nth-child(3)")
 const sectionMenu4 = document.querySelector(".menu li:nth-child(4)")
 const buscarPaleta = document.querySelector("#buscarPaleta")
+const stopPropagation = document.querySelectorAll("input[type=text],input[type=password],input[type=submit]")
 
 fetch("/to-read",{
     method : "POST",
@@ -38,12 +39,10 @@ fetch("/to-read",{
 logOut.addEventListener("click",()=>{
     window.location.href = "/logout"
 })
-
-function itemAnimation(section,maxHeight,openHeight,message){
+function itemAnimation(section,maxHeight,message){
     section.style.height = maxHeight
     let infoItem = document.createElement("p")
     infoItem.style.scale = "1"
-    let stillIn = true
     if (message.acknowledged) {
         infoItem.innerHTML = "Cambios guardados"
         infoItem.className = "menuInfo menuSucces"
@@ -56,17 +55,9 @@ function itemAnimation(section,maxHeight,openHeight,message){
     }, 2700);
     setTimeout(() => {
         infoItem.remove()
-        section.style.height = stillIn ? openHeight : "30px"
+        section.removeAttribute("style")
     }, 3000);
     section.appendChild(infoItem)
-    section.addEventListener("mouseout",()=>{
-        infoItem.remove()
-        stillIn = false
-        section.style.height = "30px"
-    })
-    section.addEventListener("mouseover",()=>{
-        section.style.height = openHeight
-    })
 }
 
 
@@ -222,9 +213,9 @@ cambiarNombreform.addEventListener("submit",(event)=>{
         }))
         .then( respuesta => respuesta.json())
         .then( ({r}) => {
-            itemAnimation(sectionMenu1,"130px","100px",r)
+            itemAnimation(sectionMenu1,"140px",r)
         })
-    }else itemAnimation(sectionMenu1,"130px","100px","Rellene los campos.")
+    }else itemAnimation(sectionMenu1,"140px","Rellene los campos.")
 })
 cambiarEmailform.addEventListener("submit",(event)=>{
     event.preventDefault()
@@ -239,9 +230,9 @@ cambiarEmailform.addEventListener("submit",(event)=>{
         }))
         .then( respuesta => respuesta.json())
         .then( ({r}) => {
-            itemAnimation(sectionMenu2,"130px","100px",r)
+            itemAnimation(sectionMenu2,"140px",r)
         })
-    }else itemAnimation(sectionMenu2,"130px","100px","Rellene los campos.")
+    }else itemAnimation(sectionMenu2,"140px","Rellene los campos.")
     
 })
 cambiarContrasenaForm.addEventListener("submit",(event) => {
@@ -256,9 +247,9 @@ cambiarContrasenaForm.addEventListener("submit",(event) => {
         })
         .then( respuesta => respuesta.json())
         .then( ({r}) => {
-            itemAnimation(sectionMenu3,"230px","190px",r)
+            itemAnimation(sectionMenu3,"240px",r)
         })
-        }else itemAnimation(sectionMenu3,"230px","190px","No coinciden.")
+        }else itemAnimation(sectionMenu3,"240px","No coinciden.")
     }
 )
 buscarPaleta.addEventListener("input",()=>{
@@ -285,3 +276,28 @@ buscarPaleta.addEventListener("input",()=>{
 buscarPaleta.addEventListener("blur",()=>{
     article.style.display = "block"
 })
+let contador1 = 0
+sectionMenu1.addEventListener("click",(e)=>{
+    sectionMenu2.className = ""
+    sectionMenu3.className = ""
+    sectionMenu2.removeAttribute("style")
+    sectionMenu3.removeAttribute("style")
+    sectionMenu1.classList.toggle("opened12")
+})
+let contador2 = 0
+sectionMenu2.addEventListener("click",(e)=>{
+    sectionMenu1.className = ""
+    sectionMenu3.className = ""
+    sectionMenu1.removeAttribute("style")
+    sectionMenu3.removeAttribute("style")
+    sectionMenu2.classList.toggle("opened12")
+})
+let contador3 = 0
+sectionMenu3.addEventListener("click",(e)=>{
+    sectionMenu1.className = ""
+    sectionMenu2.className = ""
+    sectionMenu1.removeAttribute("style")
+    sectionMenu2.removeAttribute("style")
+    sectionMenu3.classList.toggle("opened3")
+})
+stopPropagation.forEach( input => input.addEventListener("click",(e)=>{e.stopPropagation()}))

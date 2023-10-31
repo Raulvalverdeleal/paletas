@@ -6,7 +6,11 @@ const navInputs = document.querySelectorAll("nav section input")
 const h2 = document.querySelector("h2")
 const nav = document.querySelector("nav")
 const exportButton = document.querySelector("nav section:last-child :last-child:not(span)")
-const tooltip = document.querySelector(".tooltiptext")
+const tooltip = document.querySelector("nav .tooltiptext")
+const displayInfo = document.querySelector("#displayInfo")
+const info = document.querySelector("#info")
+const pops = document.querySelectorAll(".item")
+const tooltips = document.querySelectorAll("#info .tooltip")
 document.addEventListener("DOMContentLoaded", ()=> {
     fetch("/to-read",{
         method : "POST",
@@ -73,10 +77,10 @@ window.addEventListener("click",(event)=>{
         let [r,g,b] = extractRGBValues(event.target.style.backgroundColor)
         let [h,s,l] = rgbToHsl(r,g,b)
         let [hc,sc,lc] = calculateComplementaryHSL(h,s,l)
-        console.log(analogoR)
-        analogoR.style.backgroundColor = `hsl(${h + Number(navInputs[0].value)},${(s + Number(navInputs[1].value)) < 101 ? Number(navInputs[1].value) + s : 100}%,${(l + Number(navInputs[2].value)) < 101 ? Number(navInputs[2].value) + l : 100}%)`
-        analogoL.style.backgroundColor = `hsl(${h - Number(navInputs[0].value)},${(s - Number(navInputs[1].value)) > -1 ? s - Number(navInputs[1].value) : 0}%,${(l - Number(navInputs[2].value)) > -1 ? l - Number(navInputs[2].value) : 0}%)`
-        complementario.style.backgroundColor = `hsl(${hc},${sc}%,${lc}%)`
+        console.log(hc,sc,lc)
+        addColorButtons[0].style.backgroundColor = `hsl(${h + Number(navInputs[0].value)},${(s + Number(navInputs[1].value)) < 101 ? Number(navInputs[1].value) + s : 100}%,${(l + Number(navInputs[2].value)) < 101 ? Number(navInputs[2].value) + l : 100}%)`
+        addColorButtons[1].style.backgroundColor = `hsl(${h - Number(navInputs[0].value)},${(s - Number(navInputs[1].value)) > -1 ? s - Number(navInputs[1].value) : 0}%,${(l - Number(navInputs[2].value)) > -1 ? l - Number(navInputs[2].value) : 0}%)`
+        addColorButtons[2].style.backgroundColor = `hsl(${hc},${sc}%,${lc}%)`
     }
 })
 addColorButtons.forEach( button => {
@@ -140,4 +144,40 @@ function hoverTooltip(element){
             }
         }, 10);
     }, 2000);
+}
+let opened = false
+displayInfo.addEventListener("click",()=>{
+    info.classList.remove("displayNone")
+    opened = !opened
+    if (opened) {
+        pops.forEach( item => item.classList.remove("close"))
+        info.style.display = "inline-block"
+        info.classList.remove("closeInfo")
+        info.classList.add("on")
+    }else{
+        pops.forEach( item => item.classList.add("close"))
+        info.classList.remove("on")
+        info.classList.add("closeInfo")
+        tooltips.forEach( item => { item.style.display = "none"})
+        pops.forEach( item => { item.style.display = "inline-block"})
+        setTimeout(() => {
+            info.style.display = "none"
+        }, 200);
+    }
+    
+})
+for (let i = 0; i < pops.length; i++) {
+    pops[i].addEventListener("click",()=>{
+        pops.forEach( item => item.style.display = "inline-block")
+        tooltips.forEach( item => {
+                item.style.display = "none"
+                tooltips[i].style.display = "inline-block"
+                pops[i].style.display = "none"
+        })
+    })
+    tooltips[i].addEventListener("click",()=>{
+        tooltips[i].style.display = "none"
+        pops[i].style.display = "inline-block"
+    })
+    
 }

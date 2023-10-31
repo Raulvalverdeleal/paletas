@@ -10,6 +10,37 @@ body{
     height: 100vh;
     overflow: hidden;
 }
+#info{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    -webkit-backdrop-filter: grayscale(100%);
+    backdrop-filter: grayscale(100%);
+    z-index: 9;
+    animation: displayInfo .3s ease-in-out;
+}
+#displayInfo{
+    position: absolute;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    left: 95px;
+    background-color: rgb(239, 236, 47);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color .2s ease-in-out, scale .2s ease-in-out;
+    height: 35px;
+    width: 35px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#displayInfo:hover{
+    scale: 1.1;
+    background-color: rgb(255, 253, 114);
+    z-index: 10;
+}
 nav{
     display: flex;
     justify-content: space-between;
@@ -40,7 +71,7 @@ nav a span{
 nav h2{
     color: white;
 }
-nav section:nth-child(2){
+nav section:nth-child(3){
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -297,9 +328,9 @@ li.color:hover{
     position: relative;
     display: inline-block;
 }
-nav section:last-child :last-child:not(span) .tooltiptext {
+nav section:last-child :last-child:not(span) .tooltiptext{
   visibility: hidden;
-background-color: rgb(41, 84, 255);
+  background-color: rgb(41, 84, 255);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   text-align: center;
@@ -312,9 +343,8 @@ background-color: rgb(41, 84, 255);
   right: 80px;
   position: absolute;
   white-space: nowrap;
-  z-index: 10;
+  z-index: 5;
   margin-left: -60px;
-
 }
 nav section:last-child :last-child:not(span) .tooltiptext::after {
   content: "";
@@ -326,7 +356,131 @@ nav section:last-child :last-child:not(span) .tooltiptext::after {
   border-width: 5px;
   border-style: solid;
   border-color: rgb(41, 84, 255) transparent transparent transparent;
-
+}
+#info.on{
+    display: inline-block;
+}
+#info .tooltip{
+    background-color: rgb(239, 236, 47);
+    text-align: center;
+    border-radius: 6px;
+    font-size: 17px;
+    padding: 10px;
+    display: flex;
+    animation: popUp .3s ease-in-out;
+    align-items: center;
+}
+#inputs,#exportar,#seleccionar{
+    position: absolute;
+}
+#info section .tooltip{
+    position: relative;
+}
+#info .tooltip::after{
+    content: "";
+    position: absolute;
+    border-width: 10px;
+    border-style: solid;
+    border-color: rgb(239, 236, 47) transparent transparent transparent;
+}
+#inputs{
+    width: 200px;
+    top: 90px;
+    left: calc(50% - 110px);
+}
+#inputs::after {
+    top: -20px;
+    transform: rotate(180deg);
+    left: calc(50% - 10px);
+}
+#exportar{
+    width: 200px;
+    top: 90px;
+    right: 30px;
+}
+#exportar::after {
+    top: -20px;
+    transform: rotate(180deg);
+    right: 10px;
+}
+#seleccionar{
+    width: 200px;
+    top: calc(50% - (97.5px / 2));
+    right: calc(50% - 110px);
+}
+#seleccionar{
+    display: none;
+}
+#info section{
+    width: 100%;
+    position: absolute;
+    bottom: 90px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+#info section div{
+    width: calc(100% / 4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+#info section div:not(:first-child){
+    border-left: 1px solid transparent;
+}
+#info section div:first-child{
+    min-width: 150px;
+}
+#info section span.tooltip{
+    width: 200px;
+}
+#info section span.tooltip::after{
+    bottom: -20px;
+    left: calc(50% - 10px);
+}
+.item{
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    background-color: rgb(239, 236, 47);
+    cursor: pointer;
+    position: absolute;
+    border: 2px solid #555;
+    transition: border-radius .2s ease-in-out, scale .2s ease-in-out, width .2s ease-in-out;
+    animation: popUp .2s ease-in-out;
+}
+section .item{
+    position: relative;
+}
+section div:first-child .item, section div:first-child .tooltip{
+    margin-right: 20px;
+    margin-left: 20px;
+}
+section div:last-child .item, section div:last-child .tooltip{
+    margin-right: 20px;
+}
+.item:nth-child(1){
+    top: 90px;
+    left: calc(50% - 15px);
+}
+.item:nth-child(3){
+    top: 90px;
+    right: 30px;
+}
+.item:nth-child(5){
+    top: calc(50% - 15px);
+    right: calc(50% - 15px)
+}
+.item:hover{
+    scale: 1.2;
+    border-radius: 5px;
+}
+.item.close, .tooltip.close{
+    animation: close .2s ease-in-out;
+}
+#info.closeInfo{
+    animation: closeInfo .2s ease-in-out;
 }
 @keyframes popUp {
     0%{
@@ -339,3 +493,35 @@ nav section:last-child :last-child:not(span) .tooltiptext::after {
         scale: 1;
     }
 }
+@keyframes close {
+    0%{
+        scale:  1;
+    }
+    25%{
+        scale: 1.2;
+    }
+    100%{
+        scale: 0;
+    }
+}
+@keyframes displayInfo{
+    0%{
+        -webkit-backdrop-filter: grayscale(0%);
+        backdrop-filter: grayscale(0%);
+    }
+    100%{
+        -webkit-backdrop-filter: grayscale(100%);
+        backdrop-filter: grayscale(100%);
+    }
+}
+@keyframes closeInfo{
+    0%{
+        -webkit-backdrop-filter: grayscale(100%);
+        backdrop-filter: grayscale(100%);
+    }
+    100%{
+        -webkit-backdrop-filter: grayscale(0%);
+        backdrop-filter: grayscale(0%);
+    }
+}
+

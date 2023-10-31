@@ -40,7 +40,9 @@ servidor.post("/signup",(peticion,respuesta) => {
                 peticion.session.usuario = o_usuario
             }else peticion.session.errUsExists = ERR_INFO.NAME_EXISTS
         }
-        respuesta.redirect("/")
+        if (createAccountQueue.length() === 0) {
+            respuesta.redirect("/");
+        }
         callback()
     })
 })
@@ -58,7 +60,9 @@ servidor.post("/login",async (peticion,respuesta) => {
                 return respuesta.redirect("/login")
             }
         }
-        respuesta.redirect("/")
+        if (createAccountQueue.length() === 0) {
+            respuesta.redirect("/");
+        }
         callback()
     })
 })
