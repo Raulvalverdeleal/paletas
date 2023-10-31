@@ -7,7 +7,7 @@ const async = require("async")
 const {getUserById,loginUser,getPallets,getColorsFromPallet,addNewUser,addNewPallete,addNewColor,deleteUser,deletePallete,deleteColor,updateUserName,updateUserPassword,updateUserEmail,updatePaletteName,updateColor} = require("./db/db.js");
 let puerto = process.env.PORT || 4000;
 servidor.use(session({
-    secret : "/owr0r03ys-,¿/owr0r¿31Bs-,¿r0r/owka5u:k31B31Bs-,¿At2s-,$lus-,¿/ow31B¿u:k=?A¿=?A//owr0ru:k)Y*-WN¿zG@#b3ç4¡9R(CJjtHgFBm(N#¿h?14-u¿U4S*S.¿U4S4-u",
+    secret : process.env.COOKIE,
     resave : false,
     saveUninitialized : false
 }))
