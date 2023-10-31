@@ -11,29 +11,52 @@ class Color{
     let [r,g,b] = [this.color.r,this.color.g,this.color.b]
     this.elementoDOM = document.createElement("li")
     this.elementoDOM.classList.add("color")
+    this.elementoDOM.style.height = "100%"
     this.elementoDOM.style.backgroundColor = `rgb(${r},${g},${b})`
+    
     this.elementoDOM.addEventListener("mouseover", () => {
-        this.elementoDOM.style.width = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
-        this.elementoDOM.style.maxWidth = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
-        hslCode.style.opacity = "1"
+        if (window.innerWidth < 750) {
+            this.elementoDOM.style.height = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vh`
+            this.elementoDOM.style.maxHeight = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vh`
+            hslCode.style.opacity = "1"
+        }else{
+            this.elementoDOM.style.width = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
+            this.elementoDOM.style.maxWidth = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
+            hslCode.style.opacity = "1"
+        }
     });
     this.elementoDOM.addEventListener("mouseout",()=>{
-        hslCode.style.opacity = "0"
-        this.elementoDOM.style.width = "100%"
-        
+        if (window.innerWidth < 750) {
+            hslCode.style.opacity = "0"
+            this.elementoDOM.style.height = "100%" 
+        }else{
+            hslCode.style.opacity = "0"
+            this.elementoDOM.style.width = "100%"
+        }
     })
-    
+    window.addEventListener("resize",()=>{
+        if (window.innerWidth < 750) {
+            this.elementoDOM.style.maxWidth = "100vw"
+            this.elementoDOM.style.width = "100vw"
+            hslCode.innerHTML = `H: <b>${Math.floor(h)}</b><br> S: <b>${Math.floor(s)}</b><br> L: <b>${Math.floor(l)}</b>`
+
+        }else{
+            this.elementoDOM.style.maxHeight = "100vh"
+            this.elementoDOM.style.height = "100vh"
+            hslCode.innerHTML = `H: <b>${Math.floor(h)}</b>, S: <b>${Math.floor(s)}</b>, L: <b>${Math.floor(l)}</b>`
+        }
+    })
     let section = document.createElement("section")
     let [h,s,l] = rgbToHsl(r,g,b)
     let hslCode = document.createElement("p")
-    hslCode.innerHTML = `H: <b>${Math.round(h)}</b>, S: <b>${Math.round(s)}</b>, L: <b>${Math.round(l)}</b>`
+    hslCode.innerHTML = window.innerWidth < 750 ? `H: <b>${Math.floor(h)}</b><br> S: <b>${Math.floor(s)}</b><br> L: <b>${Math.floor(l)}</b>` : `H: <b>${Math.floor(h)}</b>, S: <b>${Math.floor(s)}</b>, L: <b>${Math.floor(l)}</b>`
     hslCode.style.opacity = "0"
     hslCode.addEventListener("click",()=>{
         navigator.clipboard.writeText(hslToHex(h,s,l))
         .then( () => hslCode.innerHTML = "Copiado!")
         .catch( () => hslCode.innerHTML = "Error al copiar")
         setTimeout(() => {
-            hslCode.innerHTML = `H: <b>${Math.round(h)}</b>, S: <b>${Math.round(s)}</b>, L: <b>${Math.round(l)}</b>`
+            hslCode.innerHTML = window.innerWidth < 750 ? `H: <b>${Math.floor(h)}</b><br> S: <b>${Math.floor(s)}</b><br> L: <b>${Math.floor(l)}</b>` : `H: <b>${Math.floor(h)}</b>, S: <b>${Math.floor(s)}</b>, L: <b>${Math.floor(l)}</b>`
         }, 1000);
     })
     let editButton = document.createElement("button")
@@ -81,7 +104,7 @@ class Color{
                     hslCode.className = ""
                     this.elementoDOM.style.backgroundColor = editInput.value
                     let [nh,ns,nl] = hexToHSL(editInput.value)
-                    hslCode.innerHTML = `H: <b>${Math.round(nh)}</b>, S: <b>${Math.round(ns)}</b>, L: <b>${Math.round(nl)}</b>`
+                    hslCode.innerHTML = window.innerWidth < 750 ? `H: <b>${Math.floor(nh)}</b><br> S: <b>${Math.floor(ns)}</b><br> L: <b>${Math.floor(nl)}</b>` : `H: <b>${Math.floor(nh)}</b>, S: <b>${Math.floor(ns)}</b>, L: <b>${Math.floor(nl)}</b>`
                 }
             })
         }
@@ -91,6 +114,7 @@ class Color{
         this.elementoDOM.style.backgroundColor = editInput.value
     })
     let newSection = document.createElement("section")
+    newSection.classList.add = "not"
     let newSectionElements = [editButton,hslCode,editInput]
     editButton.appendChild(editButtonSpan)
     newSectionElements.forEach( element => newSection.appendChild(element))

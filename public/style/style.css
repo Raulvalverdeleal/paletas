@@ -24,7 +24,11 @@ nav{
     box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 30px;
+    padding: 10px 7%;
+}
+nav .buscarPaleta{
+    margin-right: 30px;
+    width: 30%;
 }
 nav button, nav form input[type=submit], .menu li input[type=submit]{
     -webkit-appearance: none;
@@ -48,7 +52,8 @@ nav form{
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    width: 50%;
+    width: 70%;
+    margin: 0 30px;
 }
 nav input[type=text], .menu input[type=text], .menu input[type=password]{
     -webkit-appearance: none;
@@ -200,7 +205,7 @@ nav button:last-child:hover{
 }
 article{
     display: flex;
-    width: 90%;
+    width: 93%;
     padding: 30px 0;
     justify-content: space-between;
     align-items: center;
@@ -240,7 +245,7 @@ article p span:not(.tooltiptext){
     display: grid;
     margin-top: 100px;
     width: 90%;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-auto-flow: row;
     padding-bottom: 100px;
 }
@@ -417,14 +422,24 @@ a{
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
 }
-@media only screen and (max-width: 1520px) {
+@media only screen and (max-width: 2100px) {
+  .supreme {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media only screen and (max-width: 1760px) {
   .supreme {
     grid-template-columns: repeat(4, 1fr);
   }
 }
-@media only screen and (max-width: 1220px) {
+@media only screen and (max-width: 1400px) {
   .supreme {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media only screen and (max-width: 1050px) {
+  .supreme {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 @keyframes errorAppears {
@@ -475,8 +490,8 @@ a{
 .menu li:nth-child(4){
     display: none;
 }
-@media screen and (max-width: 500px){
-    nav #buscarPaleta{
+@media screen and (max-width: 700px){
+    nav .buscarPaleta{
         display: none;
     }
     nav form input:first-child{
@@ -485,6 +500,17 @@ a{
     nav form{
         width: 100%;
         margin: 0 20px;
+    }
+    .menu li:nth-child(4){
+        display: list-item;
+        border-top: 1px solid rgb(0, 136, 255);
+        height: 50px;
+    }
+    .menu li:nth-child(4) input{
+        width: 260px;
+    }
+    .menu li:nth-child(4).opened{
+        height: 100px;
     }
     .supreme {
         grid-template-columns: repeat(1, 1fr);

@@ -18,7 +18,8 @@ const sectionMenu1 = document.querySelector(".menu li:first-child")
 const sectionMenu2 = document.querySelector(".menu li:nth-child(2)")
 const sectionMenu3 = document.querySelector(".menu li:nth-child(3)")
 const sectionMenu4 = document.querySelector(".menu li:nth-child(4)")
-const buscarPaleta = document.querySelector("#buscarPaleta")
+const sectionMenu5 = document.querySelector(".menu li:last-child")
+const buscarPaleta = document.querySelectorAll(".buscarPaleta")
 const stopPropagation = document.querySelectorAll("input[type=text],input[type=password],input[type=submit]")
 
 fetch("/to-read",{
@@ -70,7 +71,7 @@ menuButton.addEventListener("click", ()=> {
         fondo.className = "fondo"
     }else{
         contador = 0
-        sectionMenu4.innerHTML = "Borrar cuenta"
+        sectionMenu5.innerHTML = "Borrar cuenta"
         menu.classList.add("hidden")
         fondo.className = "fondo displayNone"
 
@@ -86,40 +87,40 @@ window.addEventListener("scroll", (event)=>{
     article.style.left = `-${window.scrollY * 2}px`
 })
 
-sectionMenu4.addEventListener("click", ()=>{
+sectionMenu5.addEventListener("click", ()=>{
     contador++
     switch (contador) {
         case 1:
-            sectionMenu4.innerHTML = "Click para confirmar" 
+            sectionMenu5.innerHTML = "Click para confirmar" 
         break;
         case 2:
-            sectionMenu4.innerHTML = "¿De verdad quieres?" 
+            sectionMenu5.innerHTML = "¿De verdad quieres?" 
         break;
         case 3:
-            sectionMenu4.innerHTML = "Perderás todos tus datos" 
+            sectionMenu5.innerHTML = "Perderás todos tus datos" 
         break;
         case 4:
-            sectionMenu4.innerHTML = "¿Estás seguro?" 
+            sectionMenu5.innerHTML = "¿Estás seguro?" 
         break;
         case 5:
             let texto = "OK, procesando"
-            sectionMenu4.innerHTML = texto
+            sectionMenu5.innerHTML = texto
             let puntos = 0
-            sectionMenu4.style.pointerEvents = "none"
+            sectionMenu5.style.pointerEvents = "none"
             let interval = setInterval(() => {
                 if (puntos == 3) {
                     texto = "OK, procesando"
                     puntos = 0
-                    sectionMenu4.innerHTML = texto
+                    sectionMenu5.innerHTML = texto
                 }
                 texto += "."
-                sectionMenu4.innerHTML = texto
+                sectionMenu5.innerHTML = texto
                 puntos++
             }, 500);
             setTimeout(() => {
                 clearInterval(interval)
-                sectionMenu4.style.pointerEvents = "all"
-                sectionMenu4.innerHTML = "Por si acaso, click otra vez"
+                sectionMenu5.style.pointerEvents = "all"
+                sectionMenu5.innerHTML = "Por si acaso, click otra vez"
             }, 3000);
         break;
         case 6:
@@ -252,52 +253,71 @@ cambiarContrasenaForm.addEventListener("submit",(event) => {
         }else itemAnimation(sectionMenu3,"240px","No coinciden.")
     }
 )
-buscarPaleta.addEventListener("input",()=>{
-    const paletas = document.getElementsByClassName("paleta")
-    article.style.display = "none"
-    for (let i = 0; i < paletas.length; i++) {
-        paletas[i].classList.add("paletteDisappears")
-        setTimeout(() => {  
-            const buscar = new RegExp(buscarPaleta.value.trim(),"i")
-            let arrIds = []
-            for (let j = 0; j < paletas.length; j++) {
-            arrIds.push(paletas[j].attributes.id.value)
-            }
-            const matchedPalettes = arrIds.filter( id => buscar.test(id))
-            paletas[i].style.display = "none"   
-            matchedPalettes.forEach( id => {
-            let paleta = document.getElementById(id)
-            paleta.classList.remove("paletteDisappears")
-            paleta.style.display = "flex"
-            })
-        }, 200);
-    }
+buscarPaleta.forEach( item => {
+    item.addEventListener("input",()=>{
+        const paletas = document.getElementsByClassName("paleta")
+        article.style.display = "none"
+        for (let i = 0; i < paletas.length; i++) {
+            paletas[i].classList.add("paletteDisappears")
+            setTimeout(() => {  
+                const buscar = new RegExp(item.value.trim(),"i")
+                let arrIds = []
+                for (let j = 0; j < paletas.length; j++) {
+                arrIds.push(paletas[j].attributes.id.value)
+                }
+                const matchedPalettes = arrIds.filter( id => buscar.test(id))
+                paletas[i].style.display = "none"   
+                matchedPalettes.forEach( id => {
+                let paleta = document.getElementById(id)
+                paleta.classList.remove("paletteDisappears")
+                paleta.style.display = "flex"
+                })
+            }, 200);
+        }
+    })
+    item.addEventListener("blur",()=>{
+        article.style.display = "block"
+    })
 })
-buscarPaleta.addEventListener("blur",()=>{
-    article.style.display = "block"
-})
+
 let contador1 = 0
-sectionMenu1.addEventListener("click",(e)=>{
+sectionMenu1.addEventListener("click",()=>{
     sectionMenu2.className = ""
     sectionMenu3.className = ""
+    sectionMenu4.className = ""
     sectionMenu2.removeAttribute("style")
     sectionMenu3.removeAttribute("style")
+    sectionMenu4.removeAttribute("style")
     sectionMenu1.classList.toggle("opened12")
 })
 let contador2 = 0
-sectionMenu2.addEventListener("click",(e)=>{
+sectionMenu2.addEventListener("click",()=>{
     sectionMenu1.className = ""
     sectionMenu3.className = ""
+    sectionMenu4.className = ""
     sectionMenu1.removeAttribute("style")
     sectionMenu3.removeAttribute("style")
+    sectionMenu4.removeAttribute("style")
     sectionMenu2.classList.toggle("opened12")
 })
 let contador3 = 0
-sectionMenu3.addEventListener("click",(e)=>{
+sectionMenu3.addEventListener("click",()=>{
     sectionMenu1.className = ""
     sectionMenu2.className = ""
+    sectionMenu4.className = ""
     sectionMenu1.removeAttribute("style")
     sectionMenu2.removeAttribute("style")
+    sectionMenu4.removeAttribute("style")
     sectionMenu3.classList.toggle("opened3")
+})
+let contador4 = 0
+sectionMenu4.addEventListener("click",()=>{
+    sectionMenu1.className = ""
+    sectionMenu2.className = ""
+    sectionMenu3.className = ""
+    sectionMenu1.removeAttribute("style")
+    sectionMenu2.removeAttribute("style")
+    sectionMenu3.removeAttribute("style")
+    sectionMenu4.classList.toggle("opened")
 })
 stopPropagation.forEach( input => input.addEventListener("click",(e)=>{e.stopPropagation()}))
