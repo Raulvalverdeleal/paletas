@@ -53,6 +53,8 @@ nav{
     padding: 10px 30px;
     box-sizing: border-box;
     width: 100%;
+    position: fixed;
+    top: 0;
     height: 60px;
     box-sizing: border-box;
     background-color: #1b1624;
@@ -137,6 +139,8 @@ nav section input:not(:last-child){
 ul.contenedor{
     height: calc(100vh - 120px);
     width: 100vw;
+    position: fixed;
+    top: 60px;
     background-color: #222237;
     display: flex;
     list-style: none;
@@ -231,6 +235,8 @@ li.color:hover{
     background-color: white;
     flex-shrink: 0;
     z-index: 2;
+    position: fixed;
+    bottom: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .addColorButtons li{
