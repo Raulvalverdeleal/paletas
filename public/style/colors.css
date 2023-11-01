@@ -69,6 +69,10 @@ nav a{
     justify-content: center;
     align-items: center;
 }
+nav section:nth-child(2){
+    position: absolute;
+    left: calc(50% - 223px / 2);
+}
 nav a:hover{
     background-color: rgb(0, 136, 255);
     scale: 1.1;
@@ -471,15 +475,15 @@ section div:last-child .item, section div:last-child .tooltip{
 }
 .item:nth-child(1){
     top: 90px;
-    left: calc(50% - 15px);
+    left: calc(50% - 17px);
 }
 .item:nth-child(3){
     top: 90px;
     right: 30px;
 }
 .item:nth-child(5){
-    top: calc(50% - 15px);
-    right: calc(50% - 15px)
+    top: calc(50% - 17px);
+    right: calc(50% - 17px)
 }
 .item:hover{
     scale: 1.2;
