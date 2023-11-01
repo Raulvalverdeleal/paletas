@@ -205,5 +205,5 @@ servidor.get("/get-palette/:name", (peticion,respuesta) => {
         callback()
     })
 })
-
 servidor.listen(puerto)
+//3192 lineas.
