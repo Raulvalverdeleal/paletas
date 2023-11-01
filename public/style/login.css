@@ -58,6 +58,7 @@ h1::after{
 .form input{
 	margin-bottom: 15px;
 	font-size: 17px;
+	border: none;
 	padding: 0 10px;
 	color: #11274c;
 	transition: border 0.375s, left .1s ease-in-out;
