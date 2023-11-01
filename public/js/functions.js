@@ -215,6 +215,9 @@ cambiarNombreform.addEventListener("submit",(event)=>{
         .then( respuesta => respuesta.json())
         .then( ({r}) => {
             itemAnimation(sectionMenu1,"140px",r)
+            if (r.acknowledged) {
+                h2nombre.innerHTML = nombre
+            }
         })
     }else itemAnimation(sectionMenu1,"140px","Rellene los campos.")
 })

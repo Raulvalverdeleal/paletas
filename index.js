@@ -57,6 +57,7 @@ servidor.post("/login",async (peticion,respuesta) => {
                 peticion.session.usuario = o_usuario
             }else{
                 peticion.session.errlogin = o_usuario
+                callback()
                 return respuesta.redirect("/login")
             }
         }
@@ -178,7 +179,6 @@ servidor.delete("/to-delete", async (peticion,respuesta) => {
     let resultado = { err : false, m : ""}
     switch (tipo) {
         case 1:
-        console.log(peticion.body.paleta)
         resultado = await deletePallete(peticion.session.usuario._id, peticion.body.paleta)
         break;
 
@@ -192,13 +192,18 @@ servidor.delete("/to-delete", async (peticion,respuesta) => {
     }
     respuesta.send(resultado)
 })
-servidor.get("/get-palette/:name",async (peticion,respuesta) => {
-    if (!!peticion.session.usuario) {
-        peticion.session.visiting = peticion.params.name
-        respuesta.render("colors",{paleta : peticion.params.name})
-    }else{
-        respuesta.redirect("/")
-    }
+const openPalette = async.queue((task, callback) => {
+    task(callback)
+},1)
+servidor.get("/get-palette/:name", (peticion,respuesta) => {
+    openPalette.push( async callback => {
+        if (!!peticion.session.usuario) {
+            respuesta.render("colors",{paleta : peticion.params.name})
+        }else{
+            respuesta.redirect("/")
+        }
+        callback()
+    })
 })
 
 servidor.listen(puerto)
