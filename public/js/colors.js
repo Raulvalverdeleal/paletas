@@ -43,7 +43,7 @@ colorForm.addEventListener("submit",(event)=>{
     })
     .then( respuesta => respuesta.json())
     .then( respuesta => {
-        ocolor.id = respuesta.r
+        ocolor.id = respuesta.r.id
         items++
         new Color(h2.innerHTML,ocolor,contenedor)
     })
@@ -97,7 +97,7 @@ addColorButtons.forEach( button => {
             })
             .then( respuesta => respuesta.json())
             .then( respuesta => {
-                ocolor.id = respuesta.r
+                ocolor.id = respuesta.r.id
                 items++
                 new Color(h2.innerHTML,ocolor,contenedor)
             })
@@ -107,11 +107,11 @@ addColorButtons.forEach( button => {
 exportButton.addEventListener("click",()=>{
     if (document.getElementsByClassName("color").length !== 0) {
         let colorElements = document.querySelectorAll('.color');
-        let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${colorElements.length * 110}" height="120">`;
+        let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${colorElements.length * 110}" height="220">`;
         colorElements.forEach((colorBox, index) => {
         const color = colorBox.style.backgroundColor;
         const x = index * 110;
-        svgContent += `<rect x="${x}" y="10" width="100" height="100" fill="${color}"/>`;
+        svgContent += `<rect x="${x}" y="10" width="100" height="200" rx="20" ry="20" fill="${color}"/>`;
         });
         svgContent += `</svg>`;
         navigator.clipboard.writeText(svgContent)
@@ -181,3 +181,48 @@ for (let i = 0; i < pops.length; i++) {
     })
     
 }
+let elementoDestino = null; // Para rastrear el elemento de destino
+
+contenedor.addEventListener("dragstart", (event) => {
+  event.dataTransfer.setData("text/plain", event.target.id);
+});
+
+contenedor.addEventListener("dragover", (event) => {
+  event.preventDefault();
+
+  // Obtén el elemento de destino
+  const targetElement = event.target;
+
+  // Verifica si el destino es un elemento <li>
+  if (targetElement.tagName === "LI") {
+    // Quita la clase de resaltado del elemento anterior
+    if (elementoDestino) {
+      elementoDestino.classList.remove("insert-highlight");
+    }
+
+    // Aplica la clase de resaltado al nuevo elemento
+    elementoDestino = targetElement;
+    elementoDestino.classList.add("insert-highlight");
+  }
+});
+
+contenedor.addEventListener("dragleave", () => {
+  // Quita la clase de resaltado cuando se sale del elemento de destino
+  if (elementoDestino) {
+    elementoDestino.classList.remove("insert-highlight");
+  }
+});
+
+contenedor.addEventListener("drop", (event) => {
+  event.preventDefault();
+  const data = event.dataTransfer.getData("text/plain");
+  const elementoArrastrado = document.getElementById(data);
+
+  // Inserta el elemento en la posición correcta
+  if (elementoDestino) {
+    elementoDestino.classList.remove("insert-highlight"); // Quita la clase de resaltado
+    elementoDestino.parentNode.insertBefore(elementoArrastrado, elementoDestino);
+  } else {
+    contenedor.appendChild(elementoArrastrado);
+  }
+});

@@ -10,10 +10,12 @@ class Color{
     crearColor(contenedor){
     let [r,g,b] = [this.color.r,this.color.g,this.color.b]
     this.elementoDOM = document.createElement("li")
+    this.elementoDOM.setAttribute("draggable",true)
+    console.log(this.color)
+    this.elementoDOM.setAttribute("id",this.color.id)
     this.elementoDOM.classList.add("color")
     this.elementoDOM.style.height = "100%"
     this.elementoDOM.style.backgroundColor = `rgb(${r},${g},${b})`
-    
     this.elementoDOM.addEventListener("mouseover", () => {
         if (window.innerWidth < 750) {
             this.elementoDOM.style.height = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vh`

@@ -49,6 +49,7 @@ class Paleta{
                         if (!!r.acknowledged) {
                             h3.innerHTML = nombre//salida del nombre
                             this.name = nombre
+                            this.elementoDOM.setAttribute("id",this.name)
                         }else this.errorAnimation(h3,this.name,r)
                     })
                 }else{

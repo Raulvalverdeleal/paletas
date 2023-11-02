@@ -85,7 +85,7 @@ nav a span{
 nav h2{
     color: white;
 }
-nav section:nth-child(4){
+nav section:nth-child(2){
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -148,10 +148,12 @@ ul.contenedor{
 li.color{
     width: 100%;
     position: relative;
-    /* transition: all .5s ease-in-out; */
+    transition: border-left .3s ease-in-out;
     overflow: hidden;
 }
-
+li.insert-highlight {
+  border-left: 50px solid #1b1624;
+}
 li.color:hover{
     flex-shrink: 0;
 }
