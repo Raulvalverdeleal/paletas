@@ -10,23 +10,26 @@ class Color{
     crearColor(contenedor){
     let [r,g,b] = [this.color.r,this.color.g,this.color.b]
     this.elementoDOM = document.createElement("li")
-    this.elementoDOM.setAttribute("draggable",true)
-    console.log(this.color)
-    this.elementoDOM.setAttribute("id",this.color.id)
+    this.elementoDOM.setAttribute("draggable",true)//para que pueda ser arrastrado
+    this.elementoDOM.setAttribute("id",this.color.id)//id único
     this.elementoDOM.classList.add("color")
     this.elementoDOM.style.height = "100%"
     this.elementoDOM.style.backgroundColor = `rgb(${r},${g},${b})`
     this.elementoDOM.addEventListener("mouseover", () => {
+    //gracias a items, que es actualizado siempre que se modifique el número de li.color, se establece el ancho que tendrá cuando se haga hover sobre el elemento.
         if (window.innerWidth < 750) {
+        //Si el usuario está en un dispositivo que cumpla esta condición:
             this.elementoDOM.style.height = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vh`
             this.elementoDOM.style.maxHeight = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vh`
             hslCode.style.opacity = "1"
+        //ya que la lista será flex direction column
         }else{
             this.elementoDOM.style.width = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
             this.elementoDOM.style.maxWidth = `${items > 1 && items < 7 ? (100 / items) + 25 : items == 1 ? 100 : 30}vw`
             hslCode.style.opacity = "1"
         }
     });
+    //Devuelva a la anchura original
     this.elementoDOM.addEventListener("mouseout",()=>{
         if (window.innerWidth < 750) {
             hslCode.style.opacity = "0"
@@ -36,6 +39,7 @@ class Color{
             this.elementoDOM.style.width = "100%"
         }
     })
+    //cambia el maxwidth establecido previamente en el caso de reescalar la pantalla
     window.addEventListener("resize",()=>{
         if (window.innerWidth < 750) {
             this.elementoDOM.style.maxWidth = "100vw"
@@ -76,15 +80,19 @@ class Color{
             editInput.value = hslToHex(h,s,l)
             hslCode.className = "displayNone"
         }else{
-            let rgb = hexToRgb(editInput.value)
+            let rgb = hexToRgb(editInput.value)//convierte el hexadecimal a { r: x, g: y, b: z}
             this.color.r = rgb.r
             this.color.g = rgb.g
             this.color.b = rgb.b
-            fetch(`/to-update`,{
+        /*  #14 -> Decimocuarto fetch, para actualizar el color
+            FORMATO: 
+            respuesta ok -> r.value = true (acknowledged)
+            respuesta ko -> r.value = false
+            */
+            fetch(`/update-color`,{
             method : "PUT",
             body : JSON.stringify({
-                tipo : 5,
-                paleta_n : this.paleta,
+                nombre : this.paleta,
                 color : {
                     id : this.color.id,
                     r : this.color.r,
@@ -97,17 +105,14 @@ class Color{
             }
             })
             .then( respuesta => respuesta.json())
-            .then( ({modifiedCount}) => {
-                if (modifiedCount == 0) {
-                    console.log("ok")
-                    console.error("No se ha podido realizar la operación de editar")
-                }else{
+            .then( r => {
+                if (!r.err) {
                     editInput.className = "displayNone"
                     hslCode.className = ""
                     this.elementoDOM.style.backgroundColor = editInput.value
-                    let [nh,ns,nl] = hexToHSL(editInput.value)
+                    let [nh,ns,nl] = hexToHSL(editInput.value)//n se refiere a nuevo
                     hslCode.innerHTML = window.innerWidth < 750 ? `H: <b>${Math.floor(nh)}</b><br> S: <b>${Math.floor(ns)}</b><br> L: <b>${Math.floor(nl)}</b>` : `H: <b>${Math.floor(nh)}</b>, S: <b>${Math.floor(ns)}</b>, L: <b>${Math.floor(nl)}</b>`
-                }
+                }   //El texto deberá ser distinto si está en un móvil o en un PC
             })
         }
         editando = !editando
@@ -132,11 +137,15 @@ class Color{
     contenedor.appendChild(this.elementoDOM)
     }
     deleteColor(){
-        fetch(`/to-delete`,{
+    /*  #15 -> Decimoquinto fetch, para borrar un color
+    FORMATO: 
+    respuesta ok -> r.value = true (acknowledged)
+    respuesta ko -> r.value = false
+    */
+        fetch(`/delete-color`,{
             method : "DELETE",
             body : JSON.stringify({
-                tipo : 2,
-                paleta_n : this.paleta,
+                nombre : this.paleta,
                 colorId : this.color.id
             }),
             headers : {
@@ -144,11 +153,9 @@ class Color{
             }
         })
         .then(respuesta => respuesta.json())
-        .then(respuesta => {
-            if (!!!respuesta.acknowledged) {
-                console.error("no fue posible realizar la operación de borrar")
-            }else{
-                items--
+        .then(r => {
+            if (!r.err) {
+                items--//actualiza items (li.color)
                 this.elementoDOM.remove()                
             } 
         })

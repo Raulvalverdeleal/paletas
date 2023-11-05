@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
 </head>
 <body>
-    <button id="displayInfo"><span class="material-symbols-outlined">info</span></button>
     <div id="info" class="displayNone">
         <span class="item"></span>
         <span id="inputs" class="tooltip" style="display: none; ">H -> modifica el tono.<br>S -> modifica la saturación.<br>L -> modifica el brillo.</span>
@@ -40,6 +39,9 @@
     </div>
     <nav>
         <a href="/"><span class="material-symbols-outlined">arrow_back_ios_new</span></a>
+        <button id="displayInfo">
+            <span class="material-symbols-outlined">info</span>
+        </button>
         <section>
             <input type="number" placeholder="H" min="1" max="360">
             <input type="number" placeholder="S" min="1" max="100">
@@ -53,6 +55,7 @@
         </section>
     </nav>
     <ul class="contenedor">
+        <!-- Li.color -->
     </ul>
     <ul class="addColorButtons">
         <li>

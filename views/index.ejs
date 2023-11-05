@@ -12,14 +12,19 @@
 </head>
 <body>
     <nav>
-        <button><span class="material-symbols-outlined">menu</span></button>
+        <button>
+            <span class="material-symbols-outlined">menu</span>
+        </button>
         <form>
             <input type="text" placeholder="Crear paleta">
             <input type="submit" class="material-symbols-outlined" value="add">
         </form>
         <input class="buscarPaleta" type="text" placeholder="Buscar paleta...">
-        <button><span class="material-symbols-outlined">logout</span></button>
+        <button>
+            <span class="material-symbols-outlined">logout</span>
+        </button>
     </nav>
+
     <div class="menu hidden">
         <ul>
             <li>
@@ -29,7 +34,13 @@
                     <input type="submit" class="material-symbols-outlined" value="save">
                 </form>
             </li>
-            <li><p>Cambiar Email</p><form><input type="text" placeholder="Nuevo email ..."><input type="submit" class="material-symbols-outlined" value="save"></form></li>
+            <li>
+                <p>Cambiar Email</p>
+                <form>
+                    <input type="text" placeholder="Nuevo email ...">
+                    <input type="submit" class="material-symbols-outlined" value="save">
+                </form>
+            </li>
             <li>
                 <p>Cambiar contraseña</p>
                 <form>
@@ -45,14 +56,18 @@
             <li><p>Borrar cuenta</p></li>
         </ul>
     </div>
+
     <div class="fondo displayNone"></div>
+
     <article>
         <section>
             <h2><br><%= usuario.usuario.data.nombre %></h2>
             <p>Crea la paleta perfecta y libera tu creatividad con palette maker.</p>
         </section>
     </article>
+
     <ul class="supreme">
+        <!--  Objeto Paleta  -->
     </ul>
     <div class="space"></div>
     <script src="/js/conversionColores.js"></script>
