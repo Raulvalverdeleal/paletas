@@ -11,6 +11,12 @@ const displayInfo = document.querySelector("#displayInfo")
 const info = document.querySelector("#info")
 const pops = document.querySelectorAll(".item")
 const tooltips = document.querySelectorAll("#info .tooltip")
+const showLightnessButton = document.querySelector("nav button:nth-child(3)")
+const showLightness = document.querySelector("#showLightness")
+const showLightnessLis = document.querySelectorAll("#showLightness ul li")
+const showLightnessExport = document.querySelector("#showLightness button")
+const showLightnessTooltip = document.querySelector("#showLightness .tooltiptext")
+const showLightnessUl = document.querySelector("#showLightness ul")
 
 /*  #11 -> Undécimo fetch, para cargar los colores en la plantilla colores.ejs
     FORMATO:
@@ -89,7 +95,7 @@ navInputs[2].addEventListener("input",()=>{
 /* -- */
 
 window.addEventListener("click",(event)=>{
-    if (event.target.classList.contains("color")) {
+    if (event.target.classList.contains("color") || event.target.classList.contains("colorLightNess")) {
     //si el elemento tiene .color, osea es un li de ul.contenedor, entonces:
         //se manejan las conversiones y cálculos necesarios.
         let [r,g,b] = extractRGBValues(event.target.style.backgroundColor)
@@ -99,6 +105,11 @@ window.addEventListener("click",(event)=>{
         addColorButtons[0].style.backgroundColor = `hsl(${h + Number(navInputs[0].value)},${s + Number(navInputs[1].value)}%,${l + Number(navInputs[2].value)}%)`
         addColorButtons[1].style.backgroundColor = `hsl(${h - Number(navInputs[0].value)},${s - Number(navInputs[1].value)}%,${l - Number(navInputs[2].value)}%)`
         addColorButtons[2].style.backgroundColor = `hsl(${hc},${sc}%,${lc}%)`
+
+        showLightnessLis.forEach( (element,i) => {
+            element.style.backgroundColor = `hsl(${h},${s}%,${ i < 10 ? i * 10 : 97}%)`
+            element.setAttribute("draggable",true)
+        })
     }
 })
 addColorButtons.forEach( button => {
@@ -157,6 +168,7 @@ function hoverTooltip(element){
     }, 2000);
 }
 //Exporta un SVG copiado al portapapeles:
+
 exportButton.addEventListener("click",()=>{
     if (document.getElementsByClassName("color").length !== 0) {//si la paleta contiene al menos un color, entonces:
         let colorElements = document.querySelectorAll('.color');
@@ -183,6 +195,9 @@ displayInfo.addEventListener("click",()=>{
     info.style.display = "inline-block"
     info.classList.remove("closeInfo")
     info.classList.add("on")
+    showLightness.classList.remove("opened")
+    showed = false
+    showLightnessButton.innerHTML = "<span class=\"material-symbols-outlined\">radio_button_unchecked</span>"
 })
 //cierra el tutorial
 info.addEventListener("click",()=>{
@@ -219,43 +234,110 @@ for (let i = 0; i < pops.length; i++) {
 let elementoDestino = null; // Para rastrear el elemento de destino
 contenedor.addEventListener("dragstart", (event) => {
   // Establece el dato que se va a arrastrar (en este caso, el ID del elemento)
-  event.dataTransfer.setData("text/plain", event.target.id);
+    event.dataTransfer.setData("text/plain", event.target.id);
+    event.dataTransfer.setDragImage(event.target, 0, 0)
+});
+showLightnessUl.addEventListener("dragstart", (event) => {
+  // Establece el dato que se va a arrastrar (en este caso, el ID del elemento)
+    event.dataTransfer.setData("text/plain", event.target.id);
+    event.dataTransfer.setDragImage(event.target, 0, 0)
 });
 // Evento al arrastrar sobre el contenedor
 contenedor.addEventListener("dragover", (event) => {
-  event.preventDefault(); // Permite soltar elementos aquí
-  // Obtiene el elemento de destino
-  const targetElement = event.target;
-  // Verifica si el destino es un elemento <li>
-  if (targetElement.tagName === "LI") {
-    // Quita la clase de resaltado del elemento anterior, si lo hay
-    if (elementoDestino) {
-      elementoDestino.classList.remove("insert-highlight");
+    event.preventDefault(); // Permite soltar elementos aquí
+    // Obtiene el elemento de destino
+    const targetElement = event.target;
+    // Verifica si el destino es un elemento <li>
+    if (targetElement.tagName === "LI") {
+        // Quita la clase de resaltado del elemento anterior, si lo hay
+        if (elementoDestino) {
+        elementoDestino.classList.remove("insert-highlight");
+        }
+        // Establece el nuevo elemento de destino y le aplica una clase de resaltado
+        elementoDestino = targetElement;
+        elementoDestino.classList.add("insert-highlight");
+        //Esto es lo que añade y quita el border left
     }
-    // Establece el nuevo elemento de destino y le aplica una clase de resaltado
-    elementoDestino = targetElement;
-    elementoDestino.classList.add("insert-highlight");
-    //Esto es lo que añade y quita el border left
-  }
 });
 // Evento al salir del área de destino
 contenedor.addEventListener("dragleave", () => {
   // Quita la clase de resaltado cuando se sale del elemento de destino
-  if (elementoDestino) {
-    elementoDestino.classList.remove("insert-highlight");
-  }
+    if (elementoDestino) {
+        elementoDestino.classList.remove("insert-highlight");
+    }
 });
 // Evento al soltar un elemento
 contenedor.addEventListener("drop", (event) => {
-  event.preventDefault();
-  // Obtiene el ID del elemento arrastrado desde el portapapeles de datos
-  const data = event.dataTransfer.getData("text/plain");
-  const elementoArrastrado = document.getElementById(data);
-  // Inserta el elemento en la posición correcta
-  if (elementoDestino) {
-    elementoDestino.classList.remove("insert-highlight"); // Quita la clase de resaltado
-    elementoDestino.parentNode.insertBefore(elementoArrastrado, elementoDestino);
-  } else {
-    contenedor.appendChild(elementoArrastrado);
-  }
+    event.preventDefault();
+    // Obtiene el ID del elemento arrastrado desde el portapapeles de datos
+    const data = event.dataTransfer.getData("text/plain");
+    let elementoArrastrado = document.getElementById(data);
+    if (elementoArrastrado.className == "colorLightNess") {
+        let [r,g,b] = extractRGBValues(elementoArrastrado.style.backgroundColor)
+        let ocolor = {r: r, g: g, b: b}
+        let idDestino = elementoDestino.getAttribute("id")
+        fetch("/add-new-color-in-position",{
+            method : "POST",
+            body : JSON.stringify({nombre : h2.innerHTML, color : ocolor, colorBefore : idDestino}),
+            headers : {
+                "Content-type" : "application/json"
+                }
+        })
+        .then( respuesta => respuesta.json())
+        .then( r => {
+            if (!r.err) {
+                ocolor.id = r.value
+                items++
+                new Color(h2.innerHTML,ocolor,contenedor)
+                elementoArrastrado = document.getElementById(`${r.value}`)
+                elementoDestino.parentNode.insertBefore(elementoArrastrado, elementoDestino);
+                elementoDestino.classList.remove("insert-highlight");
+        }})
+    }else{
+        let colorMovedId = elementoArrastrado.getAttribute("id")
+        let colorBefore = elementoDestino.getAttribute("id")
+        let colors = document.querySelectorAll(".color")
+        let arrColors = []
+        colors.forEach( color => arrColors.push(color.getAttribute("id")))
+        let indiceFinal = arrColors.indexOf(colorMovedId) < arrColors.indexOf(colorBefore) ? arrColors.indexOf(colorBefore) - 1 : arrColors.indexOf(colorBefore)
+        console.log(indiceFinal);
+        fetch("/update-color-position",{
+            method : "PUT",
+            body : JSON.stringify({ nombre : h2.innerHTML, color : colorMovedId, index : indiceFinal}),
+            headers : {
+                "Content-type" : "application/json"
+            }
+        })
+        .then( respuesta => respuesta.json())
+        .then( r => {
+            if (!r.err) {
+                elementoDestino.parentNode.insertBefore(elementoArrastrado, elementoDestino);
+                elementoDestino.classList.remove("insert-highlight");
+                 // Quita la clase de resaltado
+            }
+        })
+    }
 });
+let showed = false
+showLightnessButton.addEventListener("click",()=>{
+    showLightness.classList.toggle("opened")
+    showed = !showed
+    if (showed) {
+        showLightnessButton.innerHTML = "<span class=\"material-symbols-outlined\">radio_button_checked</span>"
+    }else{
+        showLightnessButton.innerHTML = "<span class=\"material-symbols-outlined\">radio_button_unchecked</span>"
+    }
+})
+showLightnessExport.addEventListener("click",()=>{
+    let colorElements = document.querySelectorAll('.colorLightNess');
+    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${colorElements.length * 110}" height="220">`;
+    colorElements.forEach((colorBox, index) => {
+        const color = colorBox.style.backgroundColor;//establece el color de relleno del rectángulo.
+        const x = index * 110;//establece la coordenada x del rectángulo, su ancho + 10 de margen.
+        svgContent += `<rect x="${x}" y="10" width="100" height="200" rx="20" ry="20" fill="${color}"/>`;
+        //Concatena al string inicial, un rectángulo de ancho 100 y altura 200, donde rx y ry se refieren al border radius, y le asigna de relleno el propio color del li.color
+    });
+    svgContent += `</svg>`;//añade etiqueta de cierre.
+    navigator.clipboard.writeText(svgContent)
+    .then(hoverTooltip(showLightnessTooltip))
+})

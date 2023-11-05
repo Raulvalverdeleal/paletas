@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  .lista {
+    list-style-type: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 150px;
+    float: left;
+    margin: 10px;
+    height: 200px;
+  }
+
+  .lista li {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  .lista2 {
+    border: 2px solid #4CAF50;
+  }
+</style>
+</head>
+<body>
+  <ul id="lista1" class="lista">
+    <li draggable="true" ondragstart="drag(event)">Elemento 1</li>
+    <li draggable="true" ondragstart="drag(event)">Elemento 2</li>
+    <li draggable="true" ondragstart="drag(event)">Elemento 3</li>
+  </ul>
+  <ul id="lista2" class="lista" ondragover="allowDrop(event)" ondrop="drop(event)">
+  </ul>
+  <script>
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.innerHTML);
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text");
+      const newElement = document.createElement("li");
+      newElement.innerHTML = data;
+      event.target.appendChild(newElement);
+    }
+  </script>
+</body>
+</html>

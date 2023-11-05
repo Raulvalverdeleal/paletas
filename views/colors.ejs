@@ -18,6 +18,8 @@
         <span id="exportar" class="tooltip" style="display: none;">Exporta los colores de la paleta en SVG</span>
         <span class="item"></span>
         <span id="seleccionar" class="tooltip" style="display: none;">Haz click a cualquier color de la paleta para seleccionarlo.</span>
+        <span class="item"></span>
+        <span id="brillo" class="tooltip" style="display: none;">Revela una pestaña con los niveles de brillo del color seleccionado</span>
         <section>
             <div>
                 <span id="añadir" class="tooltip" style="display: none;">Elige un color y añádelo a la paleta.</span>
@@ -42,6 +44,9 @@
         <button id="displayInfo">
             <span class="material-symbols-outlined">info</span>
         </button>
+        <button>
+            <span class="material-symbols-outlined">radio_button_unchecked</span>
+        </button>
         <section>
             <input type="number" placeholder="H" min="1" max="360">
             <input type="number" placeholder="S" min="1" max="100">
@@ -54,6 +59,26 @@
             </button>
         </section>
     </nav>
+    <div id="showLightness">
+        <ul>
+            <li class="colorLightNess" id="0"></li>
+            <li class="colorLightNess" id="10"></li>
+            <li class="colorLightNess" id="20"></li>
+            <li class="colorLightNess" id="30"></li>
+            <li class="colorLightNess" id="40"></li>
+            <li class="colorLightNess" id="50"></li>
+            <li class="colorLightNess" id="60"></li>
+            <li class="colorLightNess" id="70"></li>
+            <li class="colorLightNess" id="80"></li>
+            <li class="colorLightNess" id="90"></li>
+            <li class="colorLightNess" id="97"></li>
+        </ul>
+        <section>
+            <button><span class="material-symbols-outlined">ios_share</span>
+            <span class="tooltiptext" style="visibility: hidden; scale: 0;">SVG copiado al portapapeles</span>
+            </button>
+        </section>
+    </div>
     <ul class="contenedor">
         <!-- Li.color -->
     </ul>

@@ -1,7 +1,7 @@
 const {MongoClient, ObjectId} = require("mongodb")
 const {ERR_INFO} = require("../err_messages")
 const { generateId } = require("../id_generator")
-const urlConexion = process.env.URL_MONGO
+const urlConexion = "mongodb+srv://raulvalverdeleal:UqZ8YoXtuTrpr7jJUBkk49h77QeBk@colores.m4u4gev.mongodb.net/"
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 
@@ -171,6 +171,30 @@ async function addNewColor(id, paleta, color) {
         throw error
     }
 }
+//Cuando el color se arrastre desde la barra de brillo, se hará una petición a /add-new-color-in-position
+//Que añadirá el color soltado en la posición en la que se ha soltado.
+async function addColorInPosition(id, paletteName, color,colorBefore) {
+    const conexion = await conectar()
+    try {
+        const collection = conexion.db("pruebas").collection("pruebas")
+        const { usuario } = await getUserById(id)
+        const { paletas } = usuario
+        const arrPaletas = paletas.map(({ nombre }) => nombre)//Array de nombres de las paletas del usuario
+        const arrColores = paletas[arrPaletas.indexOf(paletteName)].colores.map(({ id }) => id)//Array de los id de los colores de la paleta
+        color.id = generateId()
+        while (arrColores.includes(color.id)) {
+            color.id = generateId()
+        }
+        if (color.id) {
+            paletas[arrPaletas.indexOf(paletteName)].colores.splice(arrColores.indexOf(colorBefore), 0, color)//Se inserta este color en la posición deseada.
+        }
+        const resultado = (await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "usuario.paletas": paletas } })).acknowledged
+        if (!resultado) {throw new Error(`No se ha realizado la operación de actualizar color: ${id},${paletteName},${color},${paletas},${resultado}`)}
+        return color.id
+    } catch (error) {
+        throw error
+    }
+}
 
 async function updateUserName(id, newName) {
     const conexion = await conectar()
@@ -247,6 +271,26 @@ async function updateColor(id, paletteName, color) {
         throw error
     }
 }
+//cuando el color se arrastre, en el evento drop, se hará un fetch a /update-color-position
+//que llamará a esta función
+//Sólo si el color está ya en la paleta
+async function updateColorPosition(id, paletteName, color,index) {
+    const conexion = await conectar()
+    try {
+        const collection = conexion.db("pruebas").collection("pruebas")
+        const { usuario } = await getUserById(id)
+        const { paletas } = usuario
+        const arrPaletas = paletas.map(({ nombre }) => nombre)//Array de nombres de las paletas del usuario
+        const arrColores = paletas[arrPaletas.indexOf(paletteName)].colores.map(({ id }) => id)//Array de los id de los colores de la paleta
+        const colorToMove = paletas[arrPaletas.indexOf(paletteName)].colores.splice(arrColores.indexOf(color), 1)[0]//se elimina el color que se ha arrastrado
+        paletas[arrPaletas.indexOf(paletteName)].colores.splice(index, 0, colorToMove)//Se inserta en el índice deseado
+        const resultado = (await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "usuario.paletas": paletas } })).acknowledged
+        if (!resultado) {throw new Error(`No se ha realizado la operación de actualizar color: ${id},${paletteName},${color},${paletas},${resultado}`)}
+        return resultado
+    } catch (error) {
+        throw error
+    }
+}
 
 async function deleteUser(id) {
     const conexion = await conectar()
@@ -309,4 +353,7 @@ updatePaletteName,
 updateColor,
 deleteUser,
 deletePallete,
-deleteColor}
+deleteColor,
+addColorInPosition,
+updateColorPosition
+}

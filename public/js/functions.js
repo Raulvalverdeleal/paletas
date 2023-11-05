@@ -248,6 +248,7 @@ cambiarNombreform.addEventListener("submit",(event)=>{
             }
         })
     }else itemAnimation(sectionMenu1,"140px","a-zA-záéíóú0-9 .-_ min 2 max 20")
+    cambiarNombreInput.value = ""
 })
 /*  #5 -> Quinto fetch, para actualizar el email de usuario.
     FORMATO:
@@ -270,7 +271,7 @@ cambiarEmailform.addEventListener("submit",(event)=>{
             itemAnimation(sectionMenu2,"140px",r.value)
         })
     }else itemAnimation(sectionMenu2,"140px","Email no válido.")
-    
+    cambiarEmailInput.value = ""
 })
 /*  #6 -> Sexto fetch, para actualizar la contraseña del usuario.
     FORMATO:
@@ -298,6 +299,8 @@ cambiarContrasenaForm.addEventListener("submit",(event) => {
             itemAnimation(sectionMenu3,"240px",r.value)
         })
     }else itemAnimation(sectionMenu3,"240px","No coinciden.")
+    cambiarContrasenaInput1.value = ""
+    cambiarContrasenaInput2.value = ""
 })
 
 buscarPaleta.addEventListener("input",()=>{

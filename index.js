@@ -20,7 +20,10 @@ updateUserName,
 updateUserPassword,
 updateUserEmail,
 updatePaletteName,
-updateColor} = require("./db/db.js");
+updateColor,
+addColorInPosition,
+updateColorPosition
+} = require("./db/db.js");
 
 let puerto = process.env.PORT || 4000
 
@@ -34,7 +37,7 @@ function validate(value){
 /* -- */
 //Configuración.
 servidor.use(session({
-    secret : process.env.COOKIE,
+    secret : "process.env.COOKIE",
     resave : false,
     saveUninitialized : false
 }))
@@ -294,6 +297,44 @@ servidor.post("/add-new-color", (pet,res) => {
         }
     })
 })
+// Cola para añadir un color.
+const queueAddNewColorInPosition = async.queue((task, callback) => {
+    task(callback)
+},1)//Ejecucion secuencial.
+servidor.post("/add-new-color-in-position", (pet,res) => {
+    queueAddNewColorInPosition.push( async callback =>{
+        let r = { err : true, value : null }
+        res.status(200)
+        try {
+            if (!!!pet.session.usuario) {throw new Error("No hay ninguna sesión iniciada.")}
+            if (!/^[a-zA-z\d]{10}$/.test(pet.body.colorBefore)) {
+                throw new Error(`El id del color no ha pasado la validación: ${pet.body.colorBefore}`)
+            }
+            if (!/^[a-záéíóúñ \-._\d]{3,20}$/i.test(pet.body.nombre)) {
+                throw new Error(`El nombre de la paleta no cumple la validación. Nombre: ${pet.body.nombre}`)
+            }
+            if( typeof(pet.body.color) !== "object"){
+                throw new Error("El valor color enviado a añadir no es un objeto.")
+            }
+            let o_color = {
+                r : validate(pet.body.color.r),
+                g : validate(pet.body.color.g),
+                b : validate(pet.body.color.b)
+            }
+            //La función validate recibe un valor, si pasa la validación retorna el valor, y si no retorna 0.
+            r.value = await addColorInPosition(pet.session.usuario._id, pet.body.nombre, o_color,pet.body.colorBefore)
+            r.err = false
+        } catch (error) {
+            r.value = false
+            r.err = true
+            console.error("Error al añadir nuevo color, middleware -> /add-new-color-in-position", error)
+            res.status(500)
+        } finally {
+            res.send(r)
+            callback()
+        }
+    })
+})
 // cola para actualizar el nombre de usuario. 
 const queueUpdateUserName = async.queue((task, callback) => {
     task(callback)
@@ -451,6 +492,37 @@ servidor.put("/update-color", (pet,res) => {
         }
     })
 })
+//Cola para actualizar un color.
+const queueUpdateColorPosition = async.queue((task, callback) => {
+    task(callback)
+},1)//Ejecución secuencial.
+servidor.put("/update-color-position", (pet,res) => {
+    queueUpdateColorPosition.push( async callback =>{
+        let r = { err : true, value : null }
+        res.status(200)
+        try {
+            if (!!!pet.session.usuario) {throw new Error("No hay ninguna sesión iniciada.")}
+            if (!/^[a-záéíóúñ \-._\d]{3,20}$/i.test(pet.body.nombre)) {
+                throw new Error(`El nombre de la paleta del color enviado a actualizar, no cumple la validación. Nombre: ${pet.body.nombre}`)
+            }
+            if (!/^[a-zA-z\d]{10}$/.test(pet.body.color) && !/^[\d]{3}$/.test(pet.body.index)) {
+                throw new Error(`El id del color no ha pasado la validación: ${pet.body.color},${pet.body.index}`)
+            }
+            //Como se han implementado las colas, no habrá problemas de concurrencia con este tipos de variables.
+            r.value = await updateColorPosition(pet.session.usuario._id, pet.body.nombre, pet.body.color, pet.body.index)
+            r.err = false
+        } catch (error) {
+            r.value = false
+            r.err = true
+            console.error("Error al actualizar color, middleware -> /update-color-position", error)
+            res.status(500)
+        } finally {
+            res.send(r)
+            callback()
+        }
+    })
+})
+
 //Cola para eliminar un color.
 const queueDeleteColor = async.queue((task, callback) => {
     task(callback)

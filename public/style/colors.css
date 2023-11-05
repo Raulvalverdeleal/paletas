@@ -46,6 +46,61 @@ body{
     background-color: rgb(255, 253, 114);
     z-index: 10;
 }
+#showLightness{
+    position: fixed;
+    top: -60px;
+    z-index: 1;
+    transition: top .4s ease-in-out;
+    width: 100%;
+    height: 60px;
+    padding: 10px 30px;
+    background-color: #fff;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#showLightness.opened{
+    top: 60px;
+}
+#showLightness ul{
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    margin-right: 30px;
+    width: 100%;
+    cursor: pointer;
+}
+#showLightness ul li{
+    height: 35px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 5px;
+    transition: background-color .2s ease-in-out;
+}
+
+#showLightness button{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgb(41, 84, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    width: 35px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background-color .3s ease-in-out;
+}
+#showLightness button span{
+    color: white;
+}
 nav{
     display: flex;
     justify-content: space-between;
@@ -58,9 +113,9 @@ nav{
     height: 60px;
     box-sizing: border-box;
     background-color: #1b1624;
-    z-index: 1;
+    z-index: 2;
 }
-nav a{
+nav a, nav button:nth-child(3){
     text-decoration: none;
     background-color: rgb(41, 84, 255);
     border-radius: 5px;
@@ -71,7 +126,7 @@ nav a{
     justify-content: center;
     align-items: center;
 }
-nav a:hover{
+nav a:hover, nav button:nth-child(3):hover{
     background-color: rgb(0, 136, 255);
     scale: 1.1;
 }
@@ -81,7 +136,18 @@ nav a span{
 nav h2{
     color: white;
 }
-nav section:nth-child(3){
+nav button:nth-child(3){
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    position: absolute;
+    left: 160px;
+    cursor: pointer;
+}
+nav button:nth-child(3) span{
+    color: white;
+}
+nav section:nth-child(4){
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -104,7 +170,7 @@ nav section:last-child :last-child:not(span){
     justify-content: center;
     align-items: center;
 }
-nav section:last-child button:hover{
+nav section:last-child button:hover, #showLightness button:hover{
     background-color: rgb(57, 235, 90);
 }
 nav section:last-child :last-child span{
@@ -345,7 +411,7 @@ li.color:hover{
     position: relative;
     display: inline-block;
 }
-nav section:last-child :last-child:not(span) .tooltiptext{
+.tooltiptext{
   visibility: hidden;
   background-color: rgb(41, 84, 255);
   -webkit-backdrop-filter: blur(4px);
@@ -363,7 +429,7 @@ nav section:last-child :last-child:not(span) .tooltiptext{
   z-index: 5;
   margin-left: -60px;
 }
-nav section:last-child :last-child:not(span) .tooltiptext::after {
+.tooltiptext::after {
   content: "";
   position: absolute;
   top: 39%;
@@ -373,6 +439,9 @@ nav section:last-child :last-child:not(span) .tooltiptext::after {
   border-width: 5px;
   border-style: solid;
   border-color: rgb(41, 84, 255) transparent transparent transparent;
+}
+#showLightness .tooltiptext{
+    top: 10;
 }
 #info.on{
     display: inline-block;
@@ -425,9 +494,6 @@ nav section:last-child :last-child:not(span) .tooltiptext::after {
     top: calc(50% - (97.5px / 2));
     right: calc(50% - 110px);
 }
-#seleccionar{
-    display: none;
-}
 #info section{
     width: 100%;
     position: absolute;
@@ -442,6 +508,17 @@ nav section:last-child :last-child:not(span) .tooltiptext::after {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+#brillo{
+    width: 200px;
+    position: absolute;
+    top: 90px;
+    left: 67px;
+}
+#brillo::after{
+    top: -20px;
+    transform: rotate(180deg);
+    left: calc(50% - 10px);
 }
 #info section div:not(:first-child){
     border-left: 1px solid transparent;
@@ -488,6 +565,10 @@ section div:last-child .item, section div:last-child .tooltip{
 .item:nth-child(5){
     top: calc(50% - 17px);
     right: calc(50% - 17px)
+}
+.item:nth-child(7){
+    top: 90px;
+    left: 160px;
 }
 .item:hover{
     scale: 1.2;
