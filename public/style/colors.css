@@ -48,7 +48,7 @@ body{
 }
 #showLightness{
     position: fixed;
-    top: -60px;
+    top: 0px;
     z-index: 1;
     transition: top .4s ease-in-out;
     width: 100%;
