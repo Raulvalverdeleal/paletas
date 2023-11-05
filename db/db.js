@@ -1,7 +1,7 @@
 const {MongoClient, ObjectId} = require("mongodb")
 const {ERR_INFO} = require("../err_messages")
 const { generateId } = require("../id_generator")
-const urlConexion = "mongodb+srv://raulvalverdeleal:UqZ8YoXtuTrpr7jJUBkk49h77QeBk@colores.m4u4gev.mongodb.net/"
+const urlConexion = process.env.URL_MONGO
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 

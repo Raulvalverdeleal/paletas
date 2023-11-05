@@ -37,7 +37,7 @@ function validate(value){
 /* -- */
 //Configuración.
 servidor.use(session({
-    secret : "process.env.COOKIE",
+    secret : process.env.COOKIE,
     resave : false,
     saveUninitialized : false
 }))
